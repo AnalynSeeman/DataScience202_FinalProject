@@ -61,7 +61,11 @@ q2_data <- q1_data %>%
 
 q1_data %>%
   group_by(Platform) %>%
-  summarise(maxSales = max(Global_Sales))
+  summarise(maxSales = max(Global_Sales)) #3
+
+q2_data %>%
+  group_by(Platform) %>%
+  summarise(maxUserScore = max(User_Score), maxCriticScore = max(Critic_Score)) #4
 
 ```
 
