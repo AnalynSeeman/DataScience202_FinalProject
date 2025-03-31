@@ -11,11 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Description of Data Set
 
+
 ## Cleaning of Data Set
 
 ```{r}
 
 
 ```
+
+## Marginal Summaries
+
 
 ## Questions to be Addressed
