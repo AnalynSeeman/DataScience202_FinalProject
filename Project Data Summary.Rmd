@@ -49,8 +49,11 @@ Genre: The genre of the game.
 ## Cleaning of Data Set
 
 ``` {r}
+library(dplyr)
+library(tidyr)
 
-
+data <- data %>%
+  drop_na(Global_Sales) #dropping games with no available Sale data
 
 ```
 
