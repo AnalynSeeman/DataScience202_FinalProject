@@ -52,8 +52,16 @@ Genre: The genre of the game.
 library(dplyr)
 library(tidyr)
 
-data <- data %>%
+q1_data <- data %>%
   drop_na(Global_Sales) #dropping games with no available Sale data
+
+q2_data <- q1_data %>%
+  drop_na(Critic_Score) %>%
+  drop_na(User_Score) #dropping games with no available Sale data
+
+q1_data %>%
+  group_by(Platform) %>%
+  summarise(maxSales = max(Global_Sales))
 
 ```
 
@@ -63,12 +71,12 @@ data <- data %>%
 
 ## Questions to be Addressed
 
-Which genre has the best sales? 
+1. Which genre has the best sales? 
 
-Is there a relationship between user rating and sales? What about critic rating in sales? Which one would be better marker for a bestseller?
+2. Is there a relationship between user rating and sales? What about critic rating in sales? Which one would be better marker for a bestseller?
 
-Which platform had the most successful games?
+3. Which platform had the most successful games?
 
-Which platform's games have the best rating? Does platform affect the above questions?
+4. Which platform's games have the best rating? Does platform affect the above questions?
 
-What is the most popular genre per platform?
+5. What is the most popular genre per platform?
