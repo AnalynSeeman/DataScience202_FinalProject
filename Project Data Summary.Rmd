@@ -59,18 +59,22 @@ q2_data <- q1_data %>%
   drop_na(Critic_Score) %>%
   drop_na(User_Score) #dropping games with no available Sale data
 
+```
+
+
+## Marginal Summaries
+```{r}
+
 q1_data %>%
   group_by(Platform) %>%
   summarise(maxSales = max(Global_Sales)) #3
 
+# Anything with critic ratings, user ratings, and sales data 
 q2_data %>%
   group_by(Platform) %>%
   summarise(maxUserScore = max(User_Score), maxCriticScore = max(Critic_Score)) #4
 
 ```
-
-
-## Marginal Summaries
 
 
 ## Questions to be Addressed
