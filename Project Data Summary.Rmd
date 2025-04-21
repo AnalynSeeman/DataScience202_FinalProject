@@ -1,15 +1,38 @@
 ---
-title: "Final Project: Video Game Sales"
-author: "Analyn Seeman, Devon Katragadda, Cassidy Berghoff, and Sofi Gutierrez"
-date: "3/31/2025"
-output: html_document
+output: github_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Uploading Data Set
+# Final Project: Video Game Sales
+
+#### Analyn Seeman, Devon Katragadda, Cassidy Berghoff, and Sofi Gutierrez
+
+## Introduction
+
+Intro goes here -- State the goal of the project
+
+1.  Which genre has the best sales?
+
+2.  Is there a relationship between user rating and sales? What about
+    critic rating in sales? Which one would be better marker for a
+    bestseller?
+
+3.  Which platform had the most successful games?
+
+4.  Which platform's games have the best rating? Does platform affect
+    the above questions?
+
+5.  What is the most popular genre per platform?
+
+... and so on
+
+### Uploading Data Set
 
 ```{r}
 
@@ -20,35 +43,30 @@ head(data)
 
 ```
 
-## Description of Data Set
-``` {r}
+### Description of Data Set
+
+```{r}
 
 str(data)
 
 ```
 
-This data set compiles data from video game sales from 1978 to 2024. There are 16 columns in this dataset. They are the following:
-Rank: This is the index of the dataset.
-Name: The name of the game.
-Platform: The platform that the game was released for.
-All_Platforms: A variable that holds a "list" that describes which platforms a game is on if it is on multiple.
-All_Games: A list of all of the games in that series. 
-Publisher: The publisher of the games.
-Developer: The people that developed the game.
-Critic_Score: What numeric value the critics gave the game (NA, 0-10)
-User_Score: What numeric value the users gave the game (NA, 0-10)
-NA_Sales: 
-PAL_Sales: 
-JP_Sales:
-Other_Sales:
-Global_Sales:
-Year: The year the game was released (if in a series, the year the most recent game was released)
-Genre: The genre of the game.
+This data set compiles data from video game sales from 1978 to 2024.
+There are 16 columns in this dataset. They are the following: Rank: This
+is the index of the dataset. Name: The name of the game. Platform: The
+platform that the game was released for. All_Platforms: A variable that
+holds a "list" that describes which platforms a game is on if it is on
+multiple. All_Games: A list of all of the games in that series.
+Publisher: The publisher of the games. Developer: The people that
+developed the game. Critic_Score: What numeric value the critics gave
+the game (NA, 0-10) User_Score: What numeric value the users gave the
+game (NA, 0-10) NA_Sales: PAL_Sales: JP_Sales: Other_Sales:
+Global_Sales: Year: The year the game was released (if in a series, the
+year the most recent game was released) Genre: The genre of the game.
 
+### Cleaning of Data Set
 
-## Cleaning of Data Set
-
-``` {r}
+```{r}
 library(dplyr)
 library(tidyr)
 
@@ -61,8 +79,8 @@ q2_data <- q1_data %>%
 
 ```
 
-
 ## Marginal Summaries
+
 ```{r}
 
 q1_data %>%
@@ -76,15 +94,4 @@ q2_data %>%
 
 ```
 
-
-## Questions to be Addressed
-
-1. Which genre has the best sales? 
-
-2. Is there a relationship between user rating and sales? What about critic rating in sales? Which one would be better marker for a bestseller?
-
-3. Which platform had the most successful games?
-
-4. Which platform's games have the best rating? Does platform affect the above questions?
-
-5. What is the most popular genre per platform?
+## Conclusion
