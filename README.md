@@ -22,6 +22,12 @@ Intro goes here – State the goal of the project
 
 … and so on
 
+These are the main questions we are looking to answer throughout the
+course of the final project. Using the results of the analysis, we will
+draw a meaningful conclusion on XXX.
+
+\##Data
+
 ### Uploading Data Set
 
 ``` r
@@ -90,18 +96,33 @@ str(data)
     ##  $ Year         : int  1988 1998 2003 1998 1983 1993 2011 2011 1997 2007 ...
     ##  $ Genre        : chr  "Puzzle" "Role-Playing" "Shooter" "Action-Adventure" ...
 
+``` r
+# View(data)
+```
+
 This data set compiles data from video game sales from 1978 to 2024.
-There are 16 columns in this dataset. They are the following: Rank: This
-is the index of the dataset. Name: The name of the game. Platform: The
-platform that the game was released for. All_Platforms: A variable that
-holds a “list” that describes which platforms a game is on if it is on
-multiple. All_Games: A list of all of the games in that series.
-Publisher: The publisher of the games. Developer: The people that
-developed the game. Critic_Score: What numeric value the critics gave
-the game (NA, 0-10) User_Score: What numeric value the users gave the
-game (NA, 0-10) NA_Sales: PAL_Sales: JP_Sales: Other_Sales:
-Global_Sales: Year: The year the game was released (if in a series, the
-year the most recent game was released) Genre: The genre of the game.
+There are 16 columns in this data set, representing the 16 variables in
+the data set.
+
+### Variables
+
+- Rank: The index of the data set
+- Name: The name of the game
+- Platform: The platform that the game was released for
+- All_Platforms: A variable that holds a “list” that describes which
+  platforms a game is on if it is on multiple
+- All_Games: A list of all of the games in that series
+- Publisher: The publisher of the games
+- Developer: The people that developed the game
+- Critic_Score: What numeric value the critics gave the game (NA, 0-10)
+- User_Score: What numeric value the users gave the game (NA, 0-10)
+- NA_Sales: Sales in the North American region
+- PAL_Sales: Sales in the European region
+- JP_Sales: Sales in the Eastern Asia region
+- Other_Sales: Sales in all other regions
+- Global_Sales: Year: The year the game was released (if in a series,
+  the year the most recent game was released)
+- Genre: The genre of the game
 
 ### Cleaning of Data Set
 
@@ -186,5 +207,11 @@ q2_data %>%
     ## 16 X360             10              9.6
     ## 17 XB               10              9.4
     ## 18 XOne              9              9
+
+## Results
+
+### Question 1: INSERT QUESTION HERE
+
+#### Header
 
 ## Conclusion
