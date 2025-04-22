@@ -26,7 +26,7 @@ These are the main questions we are looking to answer throughout the
 course of the final project. Using the results of the analysis, we will
 draw a meaningful conclusion on XXX.
 
-\##Data
+## Data
 
 ### Uploading Data Set
 
