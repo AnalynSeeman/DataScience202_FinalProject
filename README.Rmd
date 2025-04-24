@@ -115,6 +115,60 @@ q2_data %>%
 
 ### Question 1: INSERT QUESTION HERE
 
+# sofi work to answer the questions:
+Question 1: Which genre has the best sales?
+```{r}
+q1_genre <- q1_data %>%
+  group_by(Genre) %>%
+  summarise(totalSales = sum(Global_Sales)) %>%
+  arrange(desc(totalSales))
+
+q1_genre
+```
+
+Question 2: Is there a relationship between user rating and sales? What about critic rating?
+```{r}
+library(ggplot2)
+
+# scatterplot for user score vs global sales
+ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "User Score vs Global Sales", x = "User Score", y = "Global Sales")
+
+# scatterplot for critic score vs global sales
+ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "red") +
+  labs(title = "Critic Score vs Global Sales", x = "Critic Score", y = "Global Sales")
+```
+
+Question 3: Which platform had the most successful games?
+```{r}
+q1_platform <- q1_data %>%
+  group_by(Platform) %>%
+  summarise(totalSales = sum(Global_Sales)) %>%
+  arrange(desc(totalSales))
+
+q1_platform
+```
+
+Question 4: Which platform's games have the best rating?
+```{r}
+q2_platform <- q2_data %>%
+  group_by(Platform) %>%
+  summarise(
+    avgUserScore = mean(User_Score, na.rm = TRUE),
+    avgCriticScore = mean(Critic_Score, na.rm = TRUE)
+  ) %>%
+  arrange(desc(avgUserScore), desc(avgCriticScore))
+
+q2_platform
+```
+
+
+Conclusion
+
 #### Header
 
 ## Conclusion
