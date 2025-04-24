@@ -72,6 +72,35 @@ head(data)
     ## 5         Platform
     ## 6           Sports
 
+``` r
+# View(data)
+```
+
+``` r
+library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+library(tidyr)
+```
+
+    ## Warning: package 'tidyr' was built under R version 4.4.3
+
+``` r
+library(ggplot2)
+```
+
 ### Description of Data Set
 
 ``` r
@@ -125,27 +154,6 @@ the data set.
 - Genre: The genre of the game
 
 ### Cleaning of Data Set
-
-``` r
-library(dplyr)
-```
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
-library(tidyr)
-```
-
-    ## Warning: package 'tidyr' was built under R version 4.4.3
 
 ``` r
 q1_data <- data %>%
@@ -254,8 +262,6 @@ value, it is the most popular genre globally.
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 
 ``` r
-library(ggplot2)
-
 # Scatter plot for user score vs global sales
 ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
   geom_point() +
@@ -265,7 +271,7 @@ ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 # Scatter plot for critic score vs global sales
@@ -277,7 +283,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 ``` r
 # These scatter plots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
@@ -308,6 +314,22 @@ q1_platform
     ##  9 3DS            319.
     ## 10 PSP            302.
     ## # ℹ 29 more rows
+
+``` r
+ggplot(q1_platform, 
+       aes(
+         x = reorder(Platform, -totalSales), 
+         y = totalSales)
+       ) +
+  geom_bar(stat = "identity") +
+  labs(title = "Total Global Sales by Platform",
+       x = "Platform",
+       y = "Total Global Sales (in millions)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 # This will list the platforms ranked by total global sales. The platform with the highest total sales is deemed the most successful.

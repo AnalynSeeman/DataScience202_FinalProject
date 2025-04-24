@@ -45,8 +45,15 @@ draw a meaningful conclusion on XXX.
 data = read.csv("Video Game Sales 1978 - 2024 export 2025-03-31 22-10-49.csv")
 
 head(data)
-View(data)
+# View(data)
 ```
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
 
 ### Description of Data Set
 
@@ -85,8 +92,6 @@ the data set.
 ### Cleaning of Data Set
 
 ```{r}
-library(dplyr)
-library(tidyr)
 
 q1_data <- data %>%
   drop_na(Global_Sales) #dropping games with no available Sale data
@@ -129,7 +134,6 @@ The above table shows the total global sales per video game genre. It is sorted 
 
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 ```{r}
-library(ggplot2)
 
 # Scatter plot for user score vs global sales
 ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
@@ -154,6 +158,19 @@ q1_platform <- q1_data %>%
   arrange(desc(totalSales))
 
 q1_platform
+
+ggplot(q1_platform, 
+       aes(
+         x = reorder(Platform, -totalSales), 
+         y = totalSales)
+       ) +
+  geom_bar(stat = "identity") +
+  labs(title = "Total Global Sales by Platform",
+       x = "Platform",
+       y = "Total Global Sales (in millions)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 
 # This will list the platforms ranked by total global sales. The platform with the highest total sales is deemed the most successful.
 ```
