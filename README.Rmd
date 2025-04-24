@@ -133,6 +133,12 @@ ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
+```{r}
+ggplot(data, aes(x = Year, y = log(Global_Sales), color = Critic_Score)) +
+  geom_point()
+```
+
+
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 ```{r}
 library(ggplot2)
