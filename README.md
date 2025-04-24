@@ -254,13 +254,18 @@ q1_genre
     ## 20 Board Game             0.33
 
 ``` r
-library(ggplot2)
 ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
   geom_bar() +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+The above table shows the total global sales per video game genre. It is
+sorted in decreasing order, meaning the most popular genre is located in
+the top row. The genre with the highest total sales indicates the most
+popular genre globally. Since `Sports` has the highest `totalSale`
+value, it is the most popular genre globally.
 
 ``` r
 ggplot(data, aes(x = Year, y = log(Global_Sales), color = Critic_Score)) +
