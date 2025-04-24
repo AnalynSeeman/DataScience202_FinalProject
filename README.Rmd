@@ -124,6 +124,8 @@ q1_genre <- q1_data %>%
   arrange(desc(totalSales))
 
 q1_genre
+
+# This table shows the total global sales per genre. The genre with the highest total sales will indicate the most popular one globally.
 ```
 
 Question 2: Is there a relationship between user rating and sales? What about critic rating?
@@ -141,6 +143,8 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
   geom_point() +
   geom_smooth(method = "lm", col = "red") +
   labs(title = "Critic Score vs Global Sales", x = "Critic Score", y = "Global Sales")
+
+# These scatterplots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
 ```
 
 Question 3: Which platform had the most successful games?
@@ -151,6 +155,8 @@ q1_platform <- q1_data %>%
   arrange(desc(totalSales))
 
 q1_platform
+
+# This will list the platforms ranked by total global sales. The platform with the highest total sales is deemed the most successful.
 ```
 
 Question 4: Which platform's games have the best rating?
@@ -164,10 +170,21 @@ q2_platform <- q2_data %>%
   arrange(desc(avgUserScore), desc(avgCriticScore))
 
 q2_platform
+
+# Platforms are ranked based on average user and critic scores. A high average score might indicate quality gaming experiences on that platform
 ```
 
 
 Conclusion
+
+1. The genre with the best sales is Sports, highlighting its popularity among players worldwide.
+
+2. There is a positive but not particularly strong relationship between both user and critic ratings and global sales. Higher scores generally align with better sales, but other variables clearly play a role. A moderate/strong relationship exists between critic ratings and global sales, suggesting their importance as a marker for potential bestsellers. This may indicate that critic ratings carry more weight or visibility in influencing purchasing decisions.  
+
+3. The most successful platform in terms of global sales is PS2.
+
+4. XB is home to games with the best average ratings, solidifying its reputation for quality.
+
 
 #### Header
 
