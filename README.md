@@ -143,11 +143,7 @@ library(dplyr)
 
 ``` r
 library(tidyr)
-```
 
-    ## Warning: package 'tidyr' was built under R version 4.4.3
-
-``` r
 q1_data <- data %>%
   drop_na(Global_Sales) #dropping games with no available Sale data
 
@@ -249,6 +245,20 @@ q1_genre
 # This table shows the total global sales per genre. The genre with the highest total sales will indicate the most popular one globally.
 ```
 
+``` r
+library(ggplot2)
+```
+
+    ## Warning: package 'ggplot2' was built under R version 4.4.2
+
+``` r
+ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 
 ``` r
@@ -263,7 +273,7 @@ ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 # scatterplot for critic score vs global sales
@@ -275,7 +285,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 ``` r
 # These scatterplots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
@@ -350,8 +360,6 @@ q2_platform
 ``` r
 # Platforms are ranked based on average user and critic scores. A high average score might indicate quality gaming experiences on that platform
 ```
-
-#### Header
 
 ## Conclusion
 
