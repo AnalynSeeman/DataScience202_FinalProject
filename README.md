@@ -253,13 +253,6 @@ q1_genre
     ## 19 Education              0.97
     ## 20 Board Game             0.33
 
-\<\<\<\<\<\<\< HEAD The above table shows the total global sales per
-video game genre. It is sorted in decreasing order, meaning the most
-popular genre is located in the top row. The genre with the highest
-total sales indicates the most popular genre globally. Since `Sports`
-has the highest `totalSale` value, it is the most popular genre
-globally. =======
-
 ``` r
 library(ggplot2)
 ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
@@ -278,8 +271,6 @@ ggplot(data, aes(x = Year, y = log(Global_Sales), color = Critic_Score)) +
     ## (`geom_point()`).
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
-
-> > > > > > > 5edbb4153981c6864081e9b37c84a6fd464593a7
 
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 
