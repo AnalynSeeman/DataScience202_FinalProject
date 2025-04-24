@@ -156,6 +156,26 @@ the data set.
 ### Cleaning of Data Set
 
 ``` r
+<<<<<<< HEAD
+=======
+library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+library(tidyr)
+
+>>>>>>> 5edbb4153981c6864081e9b37c84a6fd464593a7
 q1_data <- data %>%
   drop_na(Global_Sales) #dropping games with no available Sale data
 
@@ -259,6 +279,30 @@ the top row. The genre with the highest total sales indicates the most
 popular genre globally. Since `Sports` has the highest `totalSale`
 value, it is the most popular genre globally.
 
+``` r
+library(ggplot2)
+```
+
+    ## Warning: package 'ggplot2' was built under R version 4.4.2
+
+``` r
+ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+ggplot(data, aes(x = Year, y = log(Global_Sales), color = Critic_Score)) +
+  geom_point()
+```
+
+    ## Warning: Removed 43710 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 
 ``` r
@@ -271,7 +315,11 @@ ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+=======
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+>>>>>>> 5edbb4153981c6864081e9b37c84a6fd464593a7
 
 ``` r
 # Scatter plot for critic score vs global sales
@@ -283,7 +331,11 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+=======
+![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+>>>>>>> 5edbb4153981c6864081e9b37c84a6fd464593a7
 
 ``` r
 # These scatter plots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
