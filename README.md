@@ -245,16 +245,18 @@ q1_genre
     ## 19 Education              0.97
     ## 20 Board Game             0.33
 
-``` r
-# This table shows the total global sales per genre. The genre with the highest total sales will indicate the most popular one globally.
-```
+The above table shows the total global sales per video game genre. It is
+sorted in decreasing order, meaning the most popular genre is located in
+the top row. The genre with the highest total sales indicates the most
+popular genre globally. Since `Sports` has the highest `totalSale`
+value, it is the most popular genre globally.
 
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 
 ``` r
 library(ggplot2)
 
-# scatterplot for user score vs global sales
+# Scatter plot for user score vs global sales
 ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
   geom_point() +
   geom_smooth(method = "lm", col = "blue") +
@@ -266,7 +268,7 @@ ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
 ![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
-# scatterplot for critic score vs global sales
+# Scatter plot for critic score vs global sales
 ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
   geom_point() +
   geom_smooth(method = "lm", col = "red") +
@@ -278,7 +280,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 ![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
 ``` r
-# These scatterplots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
+# These scatter plots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
 ```
 
 ### Question 3: Which platform had the most successful games?
@@ -350,8 +352,6 @@ q2_platform
 ``` r
 # Platforms are ranked based on average user and critic scores. A high average score might indicate quality gaming experiences on that platform
 ```
-
-#### Header
 
 ## Conclusion
 
