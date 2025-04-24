@@ -259,6 +259,16 @@ ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
 
 ![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
+``` r
+ggplot(data, aes(x = Year, y = log(Global_Sales), color = Critic_Score)) +
+  geom_point()
+```
+
+    ## Warning: Removed 43710 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 
 ``` r
@@ -273,7 +283,7 @@ ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 # scatterplot for critic score vs global sales
@@ -285,7 +295,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 ``` r
 # These scatterplots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
