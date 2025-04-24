@@ -143,11 +143,7 @@ library(dplyr)
 
 ``` r
 library(tidyr)
-```
 
-    ## Warning: package 'tidyr' was built under R version 4.4.3
-
-``` r
 q1_data <- data %>%
   drop_na(Global_Sales) #dropping games with no available Sale data
 
@@ -253,7 +249,11 @@ q1_genre
 
 ``` r
 library(ggplot2)
+```
 
+    ## Warning: package 'ggplot2' was built under R version 4.4.2
+
+``` r
 # scatterplot for user score vs global sales
 ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
   geom_point() +
@@ -350,8 +350,6 @@ q2_platform
 ``` r
 # Platforms are ranked based on average user and critic scores. A high average score might indicate quality gaming experiences on that platform
 ```
-
-#### Header
 
 ## Conclusion
 
