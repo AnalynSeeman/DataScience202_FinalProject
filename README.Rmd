@@ -36,7 +36,7 @@ These are the main questions we are looking to answer throughout the
 course of the final project. Using the results of the analysis, we will
 draw a meaningful conclusion on XXX.
 
-##Data
+## Data
 
 ### Uploading Data Set
 
@@ -113,10 +113,8 @@ q2_data %>%
 
 ## Results
 
-### Question 1: INSERT QUESTION HERE
+### Question 1:  Which genre has the best sales?
 
-# sofi work to answer the questions:
-Question 1: Which genre has the best sales?
 ```{r}
 q1_genre <- q1_data %>%
   group_by(Genre) %>%
@@ -128,7 +126,7 @@ q1_genre
 # This table shows the total global sales per genre. The genre with the highest total sales will indicate the most popular one globally.
 ```
 
-Question 2: Is there a relationship between user rating and sales? What about critic rating?
+### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 ```{r}
 library(ggplot2)
 
@@ -147,7 +145,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 # These scatterplots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
 ```
 
-Question 3: Which platform had the most successful games?
+### Question 3: Which platform had the most successful games?
 ```{r}
 q1_platform <- q1_data %>%
   group_by(Platform) %>%
@@ -159,7 +157,7 @@ q1_platform
 # This will list the platforms ranked by total global sales. The platform with the highest total sales is deemed the most successful.
 ```
 
-Question 4: Which platform's games have the best rating?
+### Question 4: Which platform's games have the best rating?
 ```{r}
 q2_platform <- q2_data %>%
   group_by(Platform) %>%
@@ -175,7 +173,7 @@ q2_platform
 ```
 
 
-Conclusion
+## Conclusion
 
 1. The genre with the best sales is Sports, highlighting its popularity among players worldwide.
 
@@ -184,8 +182,3 @@ Conclusion
 3. The most successful platform in terms of global sales is PS2.
 
 4. XB is home to games with the best average ratings, solidifying its reputation for quality.
-
-
-#### Header
-
-## Conclusion

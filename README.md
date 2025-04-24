@@ -210,8 +210,163 @@ q2_data %>%
 
 ## Results
 
-### Question 1: INSERT QUESTION HERE
+### Question 1: Which genre has the best sales?
+
+``` r
+q1_genre <- q1_data %>%
+  group_by(Genre) %>%
+  summarise(totalSales = sum(Global_Sales)) %>%
+  arrange(desc(totalSales))
+
+q1_genre
+```
+
+    ## # A tibble: 20 × 2
+    ##    Genre            totalSales
+    ##    <chr>                 <dbl>
+    ##  1 Sports              1465.  
+    ##  2 Action              1353.  
+    ##  3 Shooter             1199.  
+    ##  4 Role-Playing        1013.  
+    ##  5 Platform             914.  
+    ##  6 Misc                 799.  
+    ##  7 Racing               789.  
+    ##  8 Fighting             495.  
+    ##  9 Adventure            465.  
+    ## 10 Simulation           415.  
+    ## 11 Puzzle               224.  
+    ## 12 Action-Adventure     221.  
+    ## 13 Strategy             180.  
+    ## 14 Music                 62.7 
+    ## 15 Party                 47.8 
+    ## 16 MMO                   28.5 
+    ## 17 Visual Novel           5.78
+    ## 18 Sandbox                1.89
+    ## 19 Education              0.97
+    ## 20 Board Game             0.33
+
+``` r
+# This table shows the total global sales per genre. The genre with the highest total sales will indicate the most popular one globally.
+```
+
+### Question 2: Is there a relationship between user rating and sales? What about critic rating?
+
+``` r
+library(ggplot2)
+
+# scatterplot for user score vs global sales
+ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "User Score vs Global Sales", x = "User Score", y = "Global Sales")
+```
+
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+# scatterplot for critic score vs global sales
+ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "red") +
+  labs(title = "Critic Score vs Global Sales", x = "Critic Score", y = "Global Sales")
+```
+
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+
+``` r
+# These scatterplots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
+```
+
+### Question 3: Which platform had the most successful games?
+
+``` r
+q1_platform <- q1_data %>%
+  group_by(Platform) %>%
+  summarise(totalSales = sum(Global_Sales)) %>%
+  arrange(desc(totalSales))
+
+q1_platform
+```
+
+    ## # A tibble: 39 × 2
+    ##    Platform totalSales
+    ##    <chr>         <dbl>
+    ##  1 PS2           1264.
+    ##  2 X360           986.
+    ##  3 PS3            959.
+    ##  4 Wii            916.
+    ##  5 DS             805.
+    ##  6 PS             734.
+    ##  7 PS4            652.
+    ##  8 GBA            324.
+    ##  9 3DS            319.
+    ## 10 PSP            302.
+    ## # ℹ 29 more rows
+
+``` r
+# This will list the platforms ranked by total global sales. The platform with the highest total sales is deemed the most successful.
+```
+
+### Question 4: Which platform’s games have the best rating?
+
+``` r
+q2_platform <- q2_data %>%
+  group_by(Platform) %>%
+  summarise(
+    avgUserScore = mean(User_Score, na.rm = TRUE),
+    avgCriticScore = mean(Critic_Score, na.rm = TRUE)
+  ) %>%
+  arrange(desc(avgUserScore), desc(avgCriticScore))
+
+q2_platform
+```
+
+    ## # A tibble: 18 × 3
+    ##    Platform avgUserScore avgCriticScore
+    ##    <chr>           <dbl>          <dbl>
+    ##  1 N64              9.53           9.63
+    ##  2 XB               9.37           9.3 
+    ##  3 PS4              9              9.05
+    ##  4 PSP              8.8            7.72
+    ##  5 PS2              8.79           8.82
+    ##  6 PS3              8.71           8.35
+    ##  7 PSN              8.7            7.7 
+    ##  8 NS               8.68           8.17
+    ##  9 PC               8.6            8.3 
+    ## 10 X360             8.58           8.26
+    ## 11 DS               8.53           8.32
+    ## 12 Wii              8.35           7.47
+    ## 13 NES              8.2           10   
+    ## 14 GC               8.2            7.85
+    ## 15 XOne             8              7.95
+    ## 16 PS               7.94           8.47
+    ## 17 3DS              7.77           8.13
+    ## 18 WiiU             7.44           7.48
+
+``` r
+# Platforms are ranked based on average user and critic scores. A high average score might indicate quality gaming experiences on that platform
+```
 
 #### Header
 
 ## Conclusion
+
+1.  The genre with the best sales is Sports, highlighting its popularity
+    among players worldwide.
+
+2.  There is a positive but not particularly strong relationship between
+    both user and critic ratings and global sales. Higher scores
+    generally align with better sales, but other variables clearly play
+    a role. A moderate/strong relationship exists between critic ratings
+    and global sales, suggesting their importance as a marker for
+    potential bestsellers. This may indicate that critic ratings carry
+    more weight or visibility in influencing purchasing decisions.
+
+3.  The most successful platform in terms of global sales is PS2.
+
+4.  XB is home to games with the best average ratings, solidifying its
+    reputation for quality.
