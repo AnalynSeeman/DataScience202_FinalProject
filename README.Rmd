@@ -126,6 +126,13 @@ q1_genre
 # This table shows the total global sales per genre. The genre with the highest total sales will indicate the most popular one globally.
 ```
 
+```{r}
+library(ggplot2)
+ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
 ```{r}
 library(ggplot2)
