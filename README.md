@@ -80,6 +80,8 @@ head(data)
 library(dplyr)
 ```
 
+    ## Warning: package 'dplyr' was built under R version 4.4.3
+
     ## 
     ## Attaching package: 'dplyr'
 
@@ -393,6 +395,70 @@ q2_platform
 # Platforms are ranked based on average user and critic scores. A high average score might indicate quality gaming experiences on that platform
 ```
 
+### Question 5: What does game success (sales) look like for each platform?
+
+``` r
+data %>% filter(Platform %in% c("N64", "XB","PS4", "PSP", "PS2", "PS3", "PSN", "NS", "PC", "X360", "DS", "Wii", "NES", "GC", "XOne", "PS", ""), Global_Sales > 5) %>% ggplot(aes(x=Platform, y=Global_Sales)) + geom_boxplot()
+```
+
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- --> \###
+Question 6: What years were most successful for video games?
+
+``` r
+q1_data %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col()
+```
+
+    ## Warning: Removed 84 rows containing missing values or values outside the scale range
+    ## (`geom_col()`).
+
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+\###Question 7: During the best years, which genres were most popular?
+
+``` r
+q1_data %>% filter(between(Year, 2005, 2015)) %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col() + facet_wrap(~Genre) + theme(axis.text.x = element_blank(), axis.title.x= element_blank())
+```
+
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+\###Question 8: What is the most popular genre by area?
+
+``` r
+q1_data %>% ggplot(aes(x = Genre, y = NA_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
+```
+
+    ## Warning: Removed 6645 rows containing missing values or values outside the scale range
+    ## (`geom_col()`).
+
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+``` r
+q1_data %>% ggplot(aes(x = Genre, y = PAL_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
+```
+
+    ## Warning: Removed 6282 rows containing missing values or values outside the scale range
+    ## (`geom_col()`).
+
+![](README_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
+
+``` r
+q1_data %>% ggplot(aes(x = Genre, y = JP_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
+```
+
+    ## Warning: Removed 12628 rows containing missing values or values outside the scale range
+    ## (`geom_col()`).
+
+![](README_files/figure-gfm/unnamed-chunk-15-3.png)<!-- -->
+
+``` r
+q1_data %>% ggplot(aes(x = Genre, y = Other_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
+```
+
+    ## Warning: Removed 3937 rows containing missing values or values outside the scale range
+    ## (`geom_col()`).
+
+![](README_files/figure-gfm/unnamed-chunk-15-4.png)<!-- -->
+
 ## Conclusion
 
 1.  The genre with the best sales is Sports, highlighting its popularity
@@ -410,3 +476,24 @@ q2_platform
 
 4.  XB is home to games with the best average ratings, solidifying its
     reputation for quality.
+
+5.  While XBox has the best average rating, nintendo has the best sales
+    according to this data. The NES and Wii have the highest Q3 of
+    Global Sales, with Wii having the most successful game.
+
+6.  We can see the rise of video games in the 2000’s with it peaking
+    around 2009. From there it gently declines with a sharp decrease
+    in 2020. Was this because of data collection and a bias within the
+    data, or for actual reasons? Perhaps the pandemic has caused a
+    decline in sales recently.
+
+7.  This further shows the popularity of the sports genre, as it is the
+    genre with the highest number of sales in all of the genres. Close
+    behind, Shooter and Action are also very popular.
+
+8.  While most areas, such as North America, follow the same pattern
+    with Action, Shooter, and Sports being the top 3 games, JP follows a
+    different trend. JP stands for Japan. Japan’s top performing genres
+    are Platform, Role-Playing, and Sports. Role-Playing being the
+    significantly most popular game genre. This shows the cultural
+    difference between the Americas and Japan.
