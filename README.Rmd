@@ -136,7 +136,8 @@ q1_genre
 ```{r}
 ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
   geom_bar() +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylab("Total Sales")
 ```
 
 The above table shows the total global sales per video game genre. It is sorted in decreasing order, meaning the most popular genre is located in the top row. The genre with the highest total sales indicates the most popular genre globally. Since `Sports` has the highest `totalSale` value, it is the most popular genre globally.
