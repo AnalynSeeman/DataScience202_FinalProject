@@ -5,7 +5,20 @@
 
 ## Introduction
 
-Intro goes here – State the goal of the project
+The video game industry is one of the largest and fastest-growing
+entertainment sectors in the world, engaging audiences across the world.
+With the rise of digital distribution platforms, online reviews, and
+global gaming communities, understanding what contributes to a video
+game’s commercial and critical success has become more relevant than
+ever for developers, publishers, and marketers alike.
+
+This project aims to explore the factors that define a successful video
+game by analyzing historical data across multiple categories such as
+sales, ratings, platforms, genres, and geographic trends. By examining
+these attributes, we hope to identify patterns and correlations that can
+offer insights into consumer preferences and industry dynamics.
+
+To guide our analysis, we focus on the following research questions:
 
 1.  Which genre has the best sales?
 
@@ -20,11 +33,16 @@ Intro goes here – State the goal of the project
 
 5.  What is the most popular genre per platform?
 
-… and so on
+6.  What years were most successful for video games
 
-These are the main questions we are looking to answer throughout the
-course of the final project. Using the results of the analysis, we will
-draw a meaningful conclusion on XXX.
+7.  During the best years, which genres were most popular?
+
+8.  What is the most popular genre by area?
+
+By answering these questions, we aim to identify key trends that
+influence the success of a video game. The insights gained from this
+analysis can help video game developers find the best chance of success
+in the gaming industry.
 
 ## Data
 
@@ -79,8 +97,6 @@ head(data)
 ``` r
 library(dplyr)
 ```
-
-    ## Warning: package 'dplyr' was built under R version 4.4.3
 
     ## 
     ## Attaching package: 'dplyr'
@@ -258,7 +274,8 @@ q1_genre
 ``` r
 ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
   geom_bar() +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylab("Total Sales")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
@@ -401,8 +418,9 @@ q2_platform
 data %>% filter(Platform %in% c("N64", "XB","PS4", "PSP", "PS2", "PS3", "PSN", "NS", "PC", "X360", "DS", "Wii", "NES", "GC", "XOne", "PS", ""), Global_Sales > 5) %>% ggplot(aes(x=Platform, y=Global_Sales)) + geom_boxplot()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- --> \###
-Question 6: What years were most successful for video games?
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+### Question 6: What years were most successful for video games?
 
 ``` r
 q1_data %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col()
@@ -413,7 +431,7 @@ q1_data %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col()
 
 ![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-\###Question 7: During the best years, which genres were most popular?
+### Question 7: During the best years, which genres were most popular?
 
 ``` r
 q1_data %>% filter(between(Year, 2005, 2015)) %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col() + facet_wrap(~Genre) + theme(axis.text.x = element_blank(), axis.title.x= element_blank())
@@ -421,7 +439,7 @@ q1_data %>% filter(between(Year, 2005, 2015)) %>% ggplot(aes(x = Year, y = Globa
 
 ![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
-\###Question 8: What is the most popular genre by area?
+### Question 8: What is the most popular genre by area?
 
 ``` r
 q1_data %>% ggplot(aes(x = Genre, y = NA_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))

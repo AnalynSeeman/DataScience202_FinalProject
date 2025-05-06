@@ -15,7 +15,20 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-Intro goes here -- State the goal of the project
+The video game industry is one of the largest and fastest-growing
+entertainment sectors in the world, engaging audiences across the world.
+With the rise of digital distribution platforms, online reviews, and
+global gaming communities, understanding what contributes to a video
+game's commercial and critical success has become more relevant than
+ever for developers, publishers, and marketers alike.
+
+This project aims to explore the factors that define a successful video
+game by analyzing historical data across multiple categories such as
+sales, ratings, platforms, genres, and geographic trends. By examining
+these attributes, we hope to identify patterns and correlations that can
+offer insights into consumer preferences and industry dynamics.
+
+To guide our analysis, we focus on the following research questions:
 
 1.  Which genre has the best sales?
 
@@ -30,11 +43,16 @@ Intro goes here -- State the goal of the project
 
 5.  What is the most popular genre per platform?
 
-... and so on
+6.  What years were most successful for video games
 
-These are the main questions we are looking to answer throughout the
-course of the final project. Using the results of the analysis, we will
-draw a meaningful conclusion on XXX.
+7.  During the best years, which genres were most popular?
+
+8.  What is the most popular genre by area?
+
+By answering these questions, we aim to identify key trends that
+influence the success of a video game. The insights gained from this
+analysis can help video game developers find the best chance of success
+in the gaming industry.
 
 ## Data
 
@@ -53,7 +71,6 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 ```
-
 
 ### Description of Data Set
 
@@ -119,9 +136,7 @@ q2_data %>%
 
 ## Results
 
-
-
-### Question 1:  Which genre has the best sales?
+### Question 1: Which genre has the best sales?
 
 ```{r}
 q1_genre <- q1_data %>%
@@ -132,7 +147,6 @@ q1_genre <- q1_data %>%
 q1_genre
 ```
 
-
 ```{r}
 ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
   geom_bar() +
@@ -140,15 +154,19 @@ ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
   ylab("Total Sales")
 ```
 
-The above table shows the total global sales per video game genre. It is sorted in decreasing order, meaning the most popular genre is located in the top row. The genre with the highest total sales indicates the most popular genre globally. Since `Sports` has the highest `totalSale` value, it is the most popular genre globally.
+The above table shows the total global sales per video game genre. It is
+sorted in decreasing order, meaning the most popular genre is located in
+the top row. The genre with the highest total sales indicates the most
+popular genre globally. Since `Sports` has the highest `totalSale`
+value, it is the most popular genre globally.
 
 ```{r}
 ggplot(data, aes(x = Year, y = log(Global_Sales), color = Critic_Score)) +
   geom_point()
 ```
 
-
 ### Question 2: Is there a relationship between user rating and sales? What about critic rating?
+
 ```{r}
 
 # Scatter plot for user score vs global sales
@@ -167,6 +185,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 ```
 
 ### Question 3: Which platform had the most successful games?
+
 ```{r}
 q1_platform <- q1_data %>%
   group_by(Platform) %>%
@@ -192,6 +211,7 @@ ggplot(q1_platform,
 ```
 
 ### Question 4: Which platform's games have the best rating?
+
 ```{r}
 q2_platform <- q2_data %>%
   group_by(Platform) %>%
@@ -208,26 +228,29 @@ q2_platform
 
 ### Question 5: What does game success (sales) look like for each platform?
 
-``` {r}
+```{r}
 data %>% filter(Platform %in% c("N64", "XB","PS4", "PSP", "PS2", "PS3", "PSN", "NS", "PC", "X360", "DS", "Wii", "NES", "GC", "XOne", "PS", ""), Global_Sales > 5) %>% ggplot(aes(x=Platform, y=Global_Sales)) + geom_boxplot()
 
 ```
+
 ### Question 6: What years were most successful for video games?
-``` {r}
+
+```{r}
 
 q1_data %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col()
 
 ```
 
-###Question 7: During the best years, which genres were most popular?
-``` {r}
+### Question 7: During the best years, which genres were most popular?
+
+```{r}
 q1_data %>% filter(between(Year, 2005, 2015)) %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col() + facet_wrap(~Genre) + theme(axis.text.x = element_blank(), axis.title.x= element_blank())
 
 ```
 
-###Question 8: What is the most popular genre by area?
+### Question 8: What is the most popular genre by area?
 
-``` {r}
+```{r}
 q1_data %>% ggplot(aes(x = Genre, y = NA_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
 q1_data %>% ggplot(aes(x = Genre, y = PAL_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
 q1_data %>% ggplot(aes(x = Genre, y = JP_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
@@ -235,23 +258,41 @@ q1_data %>% ggplot(aes(x = Genre, y = Other_Sales)) + geom_col() + theme(axis.te
 
 ```
 
-
 ## Conclusion
 
-1. The genre with the best sales is Sports, highlighting its popularity among players worldwide.
+1.  The genre with the best sales is Sports, highlighting its popularity
+    among players worldwide.
 
-2. There is a positive but not particularly strong relationship between both user and critic ratings and global sales. Higher scores generally align with better sales, but other variables clearly play a role. A moderate/strong relationship exists between critic ratings and global sales, suggesting their importance as a marker for potential bestsellers. This may indicate that critic ratings carry more weight or visibility in influencing purchasing decisions.  
+2.  There is a positive but not particularly strong relationship between
+    both user and critic ratings and global sales. Higher scores
+    generally align with better sales, but other variables clearly play
+    a role. A moderate/strong relationship exists between critic ratings
+    and global sales, suggesting their importance as a marker for
+    potential bestsellers. This may indicate that critic ratings carry
+    more weight or visibility in influencing purchasing decisions.
 
-3. The most successful platform in terms of global sales is PS2.
+3.  The most successful platform in terms of global sales is PS2.
 
-4. XB is home to games with the best average ratings, solidifying its reputation for quality.
+4.  XB is home to games with the best average ratings, solidifying its
+    reputation for quality.
 
-5. While XBox has the best average rating, nintendo has the best sales according to this data. The NES and Wii have the highest Q3 of Global Sales, with Wii having the most successful game. 
+5.  While XBox has the best average rating, nintendo has the best sales
+    according to this data. The NES and Wii have the highest Q3 of
+    Global Sales, with Wii having the most successful game.
 
-6. We can see the rise of video games in the 2000's with it peaking around 2009. From there it gently declines with a sharp decrease in 2020. Was this because of data collection and a bias within the data, or for actual reasons? Perhaps the pandemic has caused a decline in sales recently.
+6.  We can see the rise of video games in the 2000's with it peaking
+    around 2009. From there it gently declines with a sharp decrease
+    in 2020. Was this because of data collection and a bias within the
+    data, or for actual reasons? Perhaps the pandemic has caused a
+    decline in sales recently.
 
-7. This further shows the popularity of the sports genre, as it is the genre with the highest number of sales in all of the genres. Close behind, Shooter and Action are also very popular. 
+7.  This further shows the popularity of the sports genre, as it is the
+    genre with the highest number of sales in all of the genres. Close
+    behind, Shooter and Action are also very popular.
 
-8. While most areas, such as North America, follow the same pattern with Action, Shooter, and Sports being the top 3 games, JP follows a different trend. JP stands for Japan. Japan's top performing genres are Platform, Role-Playing, and Sports. Role-Playing being the significantly most popular game genre. This shows the cultural difference between the Americas and Japan.
-
-
+8.  While most areas, such as North America, follow the same pattern
+    with Action, Shooter, and Sports being the top 3 games, JP follows a
+    different trend. JP stands for Japan. Japan's top performing genres
+    are Platform, Role-Playing, and Sports. Role-Playing being the
+    significantly most popular game genre. This shows the cultural
+    difference between the Americas and Japan.
