@@ -182,11 +182,41 @@ ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
   geom_smooth(method = "lm", col = "blue") +
   labs(title = "User Score vs Global Sales", x = "User Score", y = "Global Sales")
 
+# Scatter plot for user score vs global sales
+ggplot(q2_data, aes(x = User_Score, y = log(Global_Sales))) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "#de7e5d") +
+  labs(title = "User Score vs Global Sales", x = "User Score", y = "Log of Global Sales")
+
 # Scatter plot for critic score vs global sales
 ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
   geom_point() +
   geom_smooth(method = "lm", col = "red") +
   labs(title = "Critic Score vs Global Sales", x = "Critic Score", y = "Global Sales")
+
+ggplot(q2_data, aes(x = Critic_Score, y = log(Global_Sales))) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "#de7e5d") +
+  labs(title = "Critic Score vs Global Sales", x = "Critic Score", y = "Log of Global Sales")
+
+ggplot(q2_data, aes(x = Critic_Score, y = User_Score)) +
+  geom_point() +
+  labs(title = "Critic Score vs User Score", x = "Critic Score", y = "User Score")
+
+ggplot(q2_data, aes(x = Critic_Score)) +
+  geom_histogram(show.legend = FALSE, binwidth = 1, fill = "#edb48c") +
+  labs(title = "Distribution of Critic Score", x = "Critic Score", y = "Count") + 
+  scale_x_continuous(breaks = seq(0, 10, by = 1), limits = c(0,11)) + 
+  ylim(0,100)
+  
+
+ggplot(q2_data, aes(x = User_Score)) +
+  geom_histogram(show.legend = FALSE, binwidth = 1, fill = "#edb48c") +
+  labs(title = "Distribution of User Score", x = "User Score", y = "Count") +
+  scale_x_continuous(breaks = seq(0, 10, by = 1), limits = c(0,11)) + 
+  ylim(0,100)
+
+q2_data %>% summarise(avgCS = mean(Critic_Score), sdCs = sd(Critic_Score), avgUS = mean(User_Score), sdUs = sd(User_Score))
 
 # These scatter plots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
 ```
@@ -311,10 +341,10 @@ ggplot(platform_region_sales, aes(x = reorder(Platform, -Sales), y = Sales, fill
 q2_platform <- q2_data %>%
   group_by(Platform) %>%
   summarise(
-    avgUserScore = mean(User_Score, na.rm = TRUE),
-    avgCriticScore = mean(Critic_Score, na.rm = TRUE)
+    `Average User Score` = mean(User_Score, na.rm = TRUE),
+    `Average Critic Score` = mean(Critic_Score, na.rm = TRUE)
   ) %>%
-  arrange(desc(avgUserScore), desc(avgCriticScore))
+  arrange(desc(`Average User Score`), desc(`Average Critic Score`))
 
 q2_platform
 
@@ -332,7 +362,7 @@ q2_platform
 
 # Add Company column to high_sales_platforms
 high_sales_platforms <- q1_data %>%
-  filter(Global_Sales > 5,
+  filter(
          Platform %in% c("N64", "XB", "PS4", "PSP", "PS2", "PS3", "PSN", 
                          "NS", "PC", "X360", "DS", "Wii", "NES", "GC", 
                          "XOne", "PS")) %>%
@@ -355,7 +385,7 @@ company_colors <- c(
 
 
 # Plot with custom colors
-ggplot(high_sales_platforms, aes(x = Platform, y = Global_Sales, fill = Company)) +
+ggplot(high_sales_platforms, aes(x = Platform, y = log(Global_Sales), fill = Company)) +
   geom_boxplot(outlier.color = "red") +
   scale_fill_manual(values = company_colors) +
   labs(
