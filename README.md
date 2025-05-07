@@ -632,19 +632,20 @@ ggplot(q1_platform, aes(x = reorder(Platform, -totalSales), y = totalSales, fill
   )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- --> We’re
-looking at total global sales across platforms, so instead of individual
-games, this is the sum of all game sales per platform. Right away, you
-can see that the PlayStation 2 is the highest. It’s the most successful
-platform globally, with over 1.25 billion units sold. After the
-PlayStation 2, we see strong performance from XBox 360, the PlayStation
-3, Wii, and DS. The bars are color-coded by brand, blue for Sony, green
-for Microsoft, red for Nintendo, and gray for PC, so we can get a sense
-of which companies had the biggest impact. It’s also worth noting that
-while Nintendo had some of the highest-selling individual games, like
-Wii Sports, Sony had more overall success when you look at total game
-sales across its platforms. So overall, this chart really highlights how
-dominant Sony, especially with the the PlayStation 2
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+We’re looking at total global sales across platforms, so instead of
+individual games, this is the sum of all game sales per platform. Right
+away, you can see that the PlayStation 2 is the highest. It’s the most
+successful platform globally, with over 1.25 billion units sold. After
+the PlayStation 2, we see strong performance from XBox 360, the
+PlayStation 3, Wii, and DS. The bars are color-coded by brand, blue for
+Sony, green for Microsoft, red for Nintendo, and gray for PC, so we can
+get a sense of which companies had the biggest impact. It’s also worth
+noting that while Nintendo had some of the highest-selling individual
+games, like Wii Sports, Sony had more overall success when you look at
+total game sales across its platforms. So overall, this chart really
+highlights how dominant Sony, especially with the the PlayStation 2
 
 ``` r
 # Define company colors
@@ -706,40 +707,41 @@ ggplot(platform_region_sales, aes(x = reorder(Platform, -Sales), y = Sales, fill
   )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- --> This breaks
-down platform sales by region, so we can see which consoles were most
-popular in different parts of the world. Let’s start with North America
-and Europe. You’ll notice the pattern is pretty similar in both regions,
-the PlayStation 2 was popular, followed by Xbox 360, PlayStation 3, and
-Wii. These were the go-to consoles during the peak gaming years of the
-2000s. In the “Other” category, which consists of the rest of the world
-excluding Japan, we see the same top performers again: PlayStation 2,
-Xbox 360, PlayStation 3, and also PlayStation 4. But we should notice
-that things look very different in Japan. Here, Nintendo dominates,
-especially with the DS and NES. The PlayStation 2 is still in the most
-popular platforms, but Nintendo’s presence is much stronger compared to
-the rest of the world. That really highlights Japan’s different gaming
-culture and preference for handhelds and classic titles. The chart is
-once again color-coded by brand, making it easy spot which company led
-where. Overall, this comparison shows how Sony had global dominance, but
-Nintendo remained incredibly strong in Japan, with Microsoft’s biggest
-impact being in North America and Europe. This led us into thinking why
-does Japan stands out so much, not just in our data, but in the history
-of video games overall. As Blake Harris puts it in his book Console
-Wars: “Without the contributions of Japan, we wouldn’t have a video game
-industry.” That really sets the tone for understanding Japan’s
-influence. Looking at the data, the top platforms in Japan were the
-PlayStation 2, DS, standing for Dual Screen, PlayStation, and NES,
-standing for Nintendo Entertainment System. All of these consoles were
-created by Sony or Nintendo. Both of those companies were founded in
-Japan, with Nintendo headquartered in Kyoto, and Sony based in Tokyo.
-And according to CNN, Tokyo was the front leader for gaming, with both
-Nintendo and Sony having deep roots there. That historical presence
-helped shape Japan into a gaming powerhouse and explains why platform
-sales are especially high there. So when we see Japan’s platform
-preferences differ from other regions, it’s not random, it reflects deep
-cultural ties, brand loyalty, and the fact that Japan is a hub for
-gaming innovation.
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+This breaks down platform sales by region, so we can see which consoles
+were most popular in different parts of the world. Let’s start with
+North America and Europe. You’ll notice the pattern is pretty similar in
+both regions, the PlayStation 2 was popular, followed by Xbox 360,
+PlayStation 3, and Wii. These were the go-to consoles during the peak
+gaming years of the 2000s. In the “Other” category, which consists of
+the rest of the world excluding Japan, we see the same top performers
+again: PlayStation 2, Xbox 360, PlayStation 3, and also PlayStation 4.
+But we should notice that things look very different in Japan. Here,
+Nintendo dominates, especially with the DS and NES. The PlayStation 2 is
+still in the most popular platforms, but Nintendo’s presence is much
+stronger compared to the rest of the world. That really highlights
+Japan’s different gaming culture and preference for handhelds and
+classic titles. The chart is once again color-coded by brand, making it
+easy spot which company led where. Overall, this comparison shows how
+Sony had global dominance, but Nintendo remained incredibly strong in
+Japan, with Microsoft’s biggest impact being in North America and
+Europe. This led us into thinking why does Japan stands out so much, not
+just in our data, but in the history of video games overall. As Blake
+Harris puts it in his book Console Wars: “Without the contributions of
+Japan, we wouldn’t have a video game industry.” That really sets the
+tone for understanding Japan’s influence. Looking at the data, the top
+platforms in Japan were the PlayStation 2, DS, standing for Dual Screen,
+PlayStation, and NES, standing for Nintendo Entertainment System. All of
+these consoles were created by Sony or Nintendo. Both of those companies
+were founded in Japan, with Nintendo headquartered in Kyoto, and Sony
+based in Tokyo. And according to CNN, Tokyo was the front leader for
+gaming, with both Nintendo and Sony having deep roots there. That
+historical presence helped shape Japan into a gaming powerhouse and
+explains why platform sales are especially high there. So when we see
+Japan’s platform preferences differ from other regions, it’s not random,
+it reflects deep cultural ties, brand loyalty, and the fact that Japan
+is a hub for gaming innovation.
 <https://www.cnn.com/2017/11/12/asia/future-japan-videogame-landmarks/index.html>
 As said by CNN, Tokyo was the front leader for gaming with SEGA and
 Nintendo originating there. This explains the platforming being higher.
@@ -825,17 +827,21 @@ q1_data %>%
 
 ### Further Questions
 
-A few questions we’d like to explore in the future: First, how do
-digital-only games compare to physical releases in terms of both sales
-and ratings? As digital distribution grows, this could reveal important
-changes in consumer behavior. Second, what role do major game franchises
-play in driving platform success? For example, how much do flagship
-titles like Call of Duty or Mario influence console popularity? Third,
-are strong marketing campaigns or optimal release timing more
-influential on sales than ratings alone? This would help us understand
-if visibility can sometimes outweigh quality in determining success. And
-finally, how has the rise of mobile and indie games shifted genre trends
-over time? These newer segments may be reshaping the industry in ways
-that traditional data doesn’t fully capture yet. These questions could
-offer deeper insights into how the video game landscape continues to
-evolve.
+A few questions we’d like to explore in the future:
+
+1.  How do digital-only games compare to physical releases in terms of
+    both sales and ratings? As digital distribution grows, this could
+    reveal important changes in consumer behavior.
+2.  What role do major game franchises play in driving platform success?
+    For example, how much do flagship titles like Call of Duty or Mario
+    influence console popularity?
+3.  Are strong marketing campaigns or optimal release timing more
+    influential on sales than ratings alone? This would help us
+    understand if visibility can sometimes outweigh quality in
+    determining success.
+4.  How has the rise of mobile and indie games shifted genre trends over
+    time? These newer segments may be reshaping the industry in ways
+    that traditional data doesn’t fully capture yet.
+
+These questions could offer deeper insights into how the video game
+landscape continues to evolve.

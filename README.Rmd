@@ -64,7 +64,9 @@ data = read.csv("Video Game Sales 1978 - 2024 export 2025-03-31 22-10-49.csv")
 
 head(data)
 ```
+
 ### Adding the libraries needed
+
 ```{r}
 library(dplyr)
 library(tidyr)
@@ -140,7 +142,9 @@ q1_genre <- q1_data %>%
 
 q1_genre
 ```
+
 #### Which Genre is the Most Popular?
+
 ```{r}
 highlight_colors <- c(
   "yes"  = "#de7e5d",  # Pastel red
@@ -155,14 +159,14 @@ q1_data %>% mutate(highlight = if_else(Genre %in% c("Sports", "Action", "Shooter
   ggtitle("Global Sales by Genre")
 ```
 
-
 The above table shows the total global sales per video game genre. It is
 sorted in decreasing order, meaning the most popular genre is located in
 the top row. The genre with the highest total sales indicates the most
-popular genre globally. Since Sports has the highest totalSale
-value, it is the most popular genre globally, followed by Action and Shooter.
+popular genre globally. Since Sports has the highest totalSale value, it
+is the most popular genre globally, followed by Action and Shooter.
 
 #### Which Genre is the Most Popular in Each Region?
+
 ```{r}
 genre_reigon_sales <- q1_data %>%
   group_by(Genre) %>%
@@ -208,12 +212,19 @@ ggplot(genre_reigon_sales, aes(x = Genre, y = Sales, fill = highlight)) +
 
 ```
 
-All areas except for Japan have the same Top 3 Genres (Sports, Action, Shooting). Japan however, has Role-Playing, Platforming, and Sports as their top 3. 
-Japan is a capital of video gaming. According to IMDb, there exists a genre titled JRPG - or Japanese Role Playing Games. This sub-genre contains popular titles such as Final Fantasy, Kingdom Hearts, and Persona 5. While those titles are popular even in the US, they are obviously extremely popular in Japanese culture given that they are in the sub-genre named after it. 
-Source: https://www.imdb.com/list/ls022397153/
+All areas except for Japan have the same Top 3 Genres (Sports, Action,
+Shooting). Japan however, has Role-Playing, Platforming, and Sports as
+their top 3. Japan is a capital of video gaming. According to IMDb,
+there exists a genre titled JRPG - or Japanese Role Playing Games. This
+sub-genre contains popular titles such as Final Fantasy, Kingdom Hearts,
+and Persona 5. While those titles are popular even in the US, they are
+obviously extremely popular in Japanese culture given that they are in
+the sub-genre named after it. Source:
+<https://www.imdb.com/list/ls022397153/>
 
 #### How does Average Sales affect Popular Genres?
-``` {r}
+
+```{r}
 q1_data %>% mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Action-Adventure"), "yes", "no")) %>% ggplot( aes(x = Genre, y=Global_Sales, fill=highlight)) +
   geom_bar(stat = "summary", fun = "mean", show.legend=FALSE) +
   scale_fill_manual(values = highlight_colors) +
@@ -243,7 +254,9 @@ ggplot(q2_data, aes(x = User_Score)) +
   ylim(0,100)
 ```
 
-The distribution of user scores are Left Skewed with an average of 8.54185. While critic scores are less (still left) skewed than user scpres. With an average of 8.162555
+The distribution of user scores are Left Skewed with an average of
+8.54185. While critic scores are less (still left) skewed than user
+scpres. With an average of 8.162555
 
 ```{r}
 # Summary Statistics: Mean and Standard Deviation for Scores
@@ -257,6 +270,7 @@ q2_data %>%
 ```
 
 #### Do Scores Differ Between Users and Critics?
+
 ```{r}
 # Scatter Plot: Critic Score vs User Score
 ggplot(q2_data, aes(x = Critic_Score, y = User_Score)) +
@@ -264,7 +278,8 @@ ggplot(q2_data, aes(x = Critic_Score, y = User_Score)) +
   labs(title = "Critic Score vs User Score", x = "Critic Score", y = "User Score")
 ```
 
-There is definitely a correlation between Critic Score and User Score, but there is a notable difference as the scores get lower.
+There is definitely a correlation between Critic Score and User Score,
+but there is a notable difference as the scores get lower.
 
 #### Do Ratings Influence Sales?
 
@@ -281,6 +296,7 @@ ggplot(q2_data, aes(x = User_Score, y = log(Global_Sales))) +
   geom_smooth(method = "lm", col = "#de7e5d") +
   labs(title = "User Score vs Log Global Sales", x = "User Score", y = "Log of Global Sales")
 ```
+
 ```{r}
 # Scatter plot for critic score vs global sales
 ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
@@ -295,9 +311,12 @@ ggplot(q2_data, aes(x = Critic_Score, y = log(Global_Sales))) +
   labs(title = "Critic Score vs Log Global Sales", x = "Critic Score", y = "Log of Global Sales")
 ```
 
-There is a very apparent log linear relationship between Sales and User Score. Critic reviews may hold more weight in shaping purchasing decisions because Less Deviance
+There is a very apparent log linear relationship between Sales and User
+Score. Critic reviews may hold more weight in shaping purchasing
+decisions because Less Deviance
 
 #### Do Scores Differ by Platform?
+
 ```{r}
 q2_platform <- q2_data %>%
   group_by(Platform) %>%
@@ -310,7 +329,8 @@ q2_platform <- q2_data %>%
 q2_platform
 ```
 
-The Scores do differ by platform, but we noticed that there are more apparent patterns between Platform and Sales.
+The Scores do differ by platform, but we noticed that there are more
+apparent patterns between Platform and Sales.
 
 ### Going into Platform
 
@@ -360,11 +380,19 @@ ggplot(high_sales_platforms, aes(x = Platform, y = log(Global_Sales), fill = Com
 
 ```
 
-We’re looking at the distribution of global sales across gaming platforms. Each box represents a platform, and it shows how game sales are spread out, from lower-performing titles to hits.
-If we look at the distribution, we’ll notice that Nintendo platforms like the NES (Nintendo Entertainment System) and Wii show a much wider spread, with some major outliers. The biggest outlier here, over 80 million units, is Wii Sports, which was bundled with the console and became one of the best-selling games of all time.
-So overall, Nintendo dominates in iconic, high-performing titles, and Sony and Microsoft stands out in consistent quality.
+We’re looking at the distribution of global sales across gaming
+platforms. Each box represents a platform, and it shows how game sales
+are spread out, from lower-performing titles to hits. If we look at the
+distribution, we’ll notice that Nintendo platforms like the NES
+(Nintendo Entertainment System) and Wii show a much wider spread, with
+some major outliers. The biggest outlier here, over 80 million units, is
+Wii Sports, which was bundled with the console and became one of the
+best-selling games of all time. So overall, Nintendo dominates in
+iconic, high-performing titles, and Sony and Microsoft stands out in
+consistent quality.
 
 #### Which Platform is the Best Selling Globally?
+
 ```{r}
 # Define brand colors
 company_colors <- c(
@@ -409,12 +437,19 @@ ggplot(q1_platform, aes(x = reorder(Platform, -totalSales), y = totalSales, fill
     axis.text.y = element_text(size = 10)
   )
 ```
-We’re looking at total global sales across platforms, so instead of individual games, this is the sum of all game sales per platform.
-Right away, you can see that the PlayStation 2 is the highest. It’s the most successful platform globally, with over 1.25 billion units sold.
-After the PlayStation 2, we see strong performance from XBox 360, the PlayStation 3, Wii, and DS. 
-The bars are color-coded by brand, blue for Sony, green for Microsoft, red for Nintendo, and gray for PC, so we can get a sense of which companies had the biggest impact.
-It’s also worth noting that while Nintendo had some of the highest-selling individual games, like Wii Sports, Sony had more overall success when you look at total game sales across its platforms.
-So overall, this chart really highlights how dominant Sony, especially with the the PlayStation 2
+
+We’re looking at total global sales across platforms, so instead of
+individual games, this is the sum of all game sales per platform. Right
+away, you can see that the PlayStation 2 is the highest. It’s the most
+successful platform globally, with over 1.25 billion units sold. After
+the PlayStation 2, we see strong performance from XBox 360, the
+PlayStation 3, Wii, and DS. The bars are color-coded by brand, blue for
+Sony, green for Microsoft, red for Nintendo, and gray for PC, so we can
+get a sense of which companies had the biggest impact. It’s also worth
+noting that while Nintendo had some of the highest-selling individual
+games, like Wii Sports, Sony had more overall success when you look at
+total game sales across its platforms. So overall, this chart really
+highlights how dominant Sony, especially with the the PlayStation 2
 
 ```{r}
 # Define company colors
@@ -475,22 +510,46 @@ ggplot(platform_region_sales, aes(x = reorder(Platform, -Sales), y = Sales, fill
     plot.title = element_text(face = "bold", size = 16)
   )
 ```
-This  breaks down platform sales by region, so we can see which consoles were most popular in different parts of the world.
-Let’s start with North America and Europe. You’ll notice the pattern is pretty similar in both regions, the PlayStation 2 was popular, followed by Xbox 360, PlayStation 3, and Wii. These were the go-to consoles during the peak gaming years of the 2000s.
-In the "Other" category, which consists of the rest of the world excluding Japan, we see the same top performers again: PlayStation 2, Xbox 360, PlayStation 3, and also PlayStation 4.
-But we should notice that things look very different in Japan. Here, Nintendo dominates, especially with the DS and NES. The PlayStation 2 is still in the most popular platforms, but Nintendo's presence is much stronger compared to the rest of the world. That really highlights Japan's different gaming culture and preference for handhelds and classic titles.
-The chart is once again color-coded by brand, making it easy spot which company led where.
-Overall, this comparison shows how Sony had global dominance, but Nintendo remained incredibly strong in Japan, with Microsoft’s biggest impact being in North America and Europe.
-This led us into thinking why does Japan stands out so much, not just in our data, but in the history of video games overall.
-As Blake Harris puts it in his book Console Wars: “Without the contributions of Japan, we wouldn’t have a video game industry.” That really sets the tone for understanding Japan's influence.
-Looking at the data, the top platforms in Japan were the PlayStation 2, DS, standing for Dual Screen, PlayStation, and NES, standing for Nintendo Entertainment System. All of these consoles were created by Sony or Nintendo.
-Both of those companies were founded in Japan, with Nintendo headquartered in Kyoto, and Sony based in Tokyo.
-And according to CNN, Tokyo was the front leader for gaming, with both Nintendo and Sony having deep roots there. That historical presence helped shape Japan into a gaming powerhouse and explains why platform sales are especially high there.
-So when we see Japan’s platform preferences differ from other regions, it’s not random, it reflects deep cultural ties, brand loyalty, and the fact that Japan is a hub for gaming innovation.
-https://www.cnn.com/2017/11/12/asia/future-japan-videogame-landmarks/index.html
-As said by CNN, Tokyo was the front leader for gaming with SEGA and Nintendo originating there. This explains the platforming being higher. 
+
+This breaks down platform sales by region, so we can see which consoles
+were most popular in different parts of the world. Let’s start with
+North America and Europe. You’ll notice the pattern is pretty similar in
+both regions, the PlayStation 2 was popular, followed by Xbox 360,
+PlayStation 3, and Wii. These were the go-to consoles during the peak
+gaming years of the 2000s. In the "Other" category, which consists of
+the rest of the world excluding Japan, we see the same top performers
+again: PlayStation 2, Xbox 360, PlayStation 3, and also PlayStation 4.
+But we should notice that things look very different in Japan. Here,
+Nintendo dominates, especially with the DS and NES. The PlayStation 2 is
+still in the most popular platforms, but Nintendo's presence is much
+stronger compared to the rest of the world. That really highlights
+Japan's different gaming culture and preference for handhelds and
+classic titles. The chart is once again color-coded by brand, making it
+easy spot which company led where. Overall, this comparison shows how
+Sony had global dominance, but Nintendo remained incredibly strong in
+Japan, with Microsoft’s biggest impact being in North America and
+Europe. This led us into thinking why does Japan stands out so much, not
+just in our data, but in the history of video games overall. As Blake
+Harris puts it in his book Console Wars: “Without the contributions of
+Japan, we wouldn’t have a video game industry.” That really sets the
+tone for understanding Japan's influence. Looking at the data, the top
+platforms in Japan were the PlayStation 2, DS, standing for Dual Screen,
+PlayStation, and NES, standing for Nintendo Entertainment System. All of
+these consoles were created by Sony or Nintendo. Both of those companies
+were founded in Japan, with Nintendo headquartered in Kyoto, and Sony
+based in Tokyo. And according to CNN, Tokyo was the front leader for
+gaming, with both Nintendo and Sony having deep roots there. That
+historical presence helped shape Japan into a gaming powerhouse and
+explains why platform sales are especially high there. So when we see
+Japan’s platform preferences differ from other regions, it’s not random,
+it reflects deep cultural ties, brand loyalty, and the fact that Japan
+is a hub for gaming innovation.
+<https://www.cnn.com/2017/11/12/asia/future-japan-videogame-landmarks/index.html>
+As said by CNN, Tokyo was the front leader for gaming with SEGA and
+Nintendo originating there. This explains the platforming being higher.
 
 ### Year Graphs
+
 ```{r}
  q1_data %>%
   ggplot(aes(x = Year, y = Global_Sales)) +
@@ -503,7 +562,6 @@ As said by CNN, Tokyo was the front leader for gaming with SEGA and Nintendo ori
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_y_continuous(labels = scales::comma)
 ```
-
 
 ```{r}
 q1_data %>%
@@ -523,11 +581,6 @@ q1_data %>%
   scale_y_continuous(labels = scales::comma)
 
 ```
-
-
-
-
-
 
 ## Conclusion
 
@@ -569,13 +622,22 @@ q1_data %>%
     difference between the Americas and Japan.
 
 ### Further Questions
-A few questions we’d like to explore in the future:
-First, how do digital-only games compare to physical releases in terms of both sales and ratings? As digital distribution grows, this could reveal important changes in consumer behavior.
-Second, what role do major game franchises play in driving platform success?
-For example, how much do flagship titles like Call of Duty or Mario influence console popularity?
-Third, are strong marketing campaigns or optimal release timing more influential on sales than ratings alone?
-This would help us understand if visibility can sometimes outweigh quality in determining success.
-And finally, how has the rise of mobile and indie games shifted genre trends over time?
-These newer segments may be reshaping the industry in ways that traditional data doesn’t fully capture yet.
-These questions could offer deeper insights into how the video game landscape continues to evolve.
 
+A few questions we’d like to explore in the future:
+
+1.  How do digital-only games compare to physical releases in terms of
+    both sales and ratings? As digital distribution grows, this could
+    reveal important changes in consumer behavior.
+2.  What role do major game franchises play in driving platform success?
+    For example, how much do flagship titles like Call of Duty or Mario
+    influence console popularity?
+3.  Are strong marketing campaigns or optimal release timing more
+    influential on sales than ratings alone? This would help us
+    understand if visibility can sometimes outweigh quality in
+    determining success.
+4.  How has the rise of mobile and indie games shifted genre trends over
+    time? These newer segments may be reshaping the industry in ways
+    that traditional data doesn’t fully capture yet.
+
+These questions could offer deeper insights into how the video game
+landscape continues to evolve.
