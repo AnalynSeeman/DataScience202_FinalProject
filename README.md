@@ -90,15 +90,11 @@ head(data)
     ## 5         Platform
     ## 6           Sports
 
-``` r
-# View(data)
-```
+### Adding the libraries needed
 
 ``` r
 library(dplyr)
 ```
-
-    ## Warning: package 'dplyr' was built under R version 4.4.3
 
     ## 
     ## Attaching package: 'dplyr'
@@ -145,10 +141,6 @@ str(data)
     ##  $ Year         : int  1988 1998 2003 1998 1983 1993 2011 2011 1997 2007 ...
     ##  $ Genre        : chr  "Puzzle" "Role-Playing" "Shooter" "Action-Adventure" ...
 
-``` r
-# View(data)
-```
-
 This data set compiles data from video game sales from 1978 to 2024.
 There are 16 columns in this data set, representing the 16 variables in
 the data set.
@@ -184,7 +176,7 @@ q2_data <- q1_data %>%
   drop_na(User_Score)   #dropping games with no available Sale data
 ```
 
-## Marginal Summaries
+### Marginal Summaries
 
 ``` r
 q1_data %>%
@@ -211,7 +203,7 @@ q1_data %>%
 # Anything with critic ratings, user ratings, and sales data 
 q2_data %>%
   group_by(Platform) %>%
-  summarise(maxUserScore = max(User_Score), maxCriticScore = max(Critic_Score)) #4
+  summarise(maxUserScore = max(User_Score), maxCriticScore = max(Critic_Score))
 ```
 
     ## # A tibble: 18 × 3
@@ -238,7 +230,7 @@ q2_data %>%
 
 ## Results
 
-### Question 1: Which genre has the best sales?
+### Going into Genres
 
 ``` r
 q1_genre <- q1_data %>%
@@ -273,6 +265,8 @@ q1_genre
     ## 19 Education              0.97
     ## 20 Board Game             0.33
 
+#### Which Genre is the Most Popular?
+
 ``` r
 highlight_colors <- c(
   "yes"  = "#de7e5d",  # Pastel red
@@ -292,20 +286,145 @@ q1_data %>% mutate(highlight = if_else(Genre %in% c("Sports", "Action", "Shooter
 The above table shows the total global sales per video game genre. It is
 sorted in decreasing order, meaning the most popular genre is located in
 the top row. The genre with the highest total sales indicates the most
-popular genre globally. Since `Sports` has the highest `totalSale`
-value, it is the most popular genre globally.
+popular genre globally. Since Sports has the highest totalSale value, it
+is the most popular genre globally, followed by Action and Shooter.
+
+#### Which Genre is the Most Popular in Each Region?
 
 ``` r
-ggplot(data, aes(x = Year, y = log(Global_Sales), color = Critic_Score)) +
-  geom_point()
-```
+genre_reigon_sales <- q1_data %>%
+  group_by(Genre) %>%
+  summarise(
+    NA_Sales = sum(NA_Sales, na.rm = TRUE),
+    PAL_Sales = sum(PAL_Sales, na.rm = TRUE),
+    JP_Sales = sum(JP_Sales, na.rm = TRUE),
+    Other_Sales = sum(Other_Sales, na.rm = TRUE)
+  ) %>%
+  pivot_longer(
+    cols = c(NA_Sales, PAL_Sales, JP_Sales, Other_Sales),
+    names_to = "Region",
+    values_to = "Sales"
+  ) %>%
+  mutate(
+    Region = recode(Region,
+                    "NA_Sales" = "North America",
+                    "PAL_Sales" = "Europe",
+                    "JP_Sales" = "Japan",
+                    "Other_Sales" = "Other"),
+    highlight = if_else(
+      ((Region == "Japan" & (Genre %in% c("Role-Playing", "Platform", "Sports"))) |
+         (Region != "Japan" & (Genre %in% c("Sports", "Action", "Shooter")))
+         ),"yes", "no" )
+  )
 
-    ## Warning: Removed 43710 rows containing missing values or values outside the scale range
-    ## (`geom_point()`).
+highlight_colors <- c(
+  "yes"  = "#de7e5d",  # Pastel red
+  "no"      = "#edb48c"  # Pastel blue
+)
+
+
+ggplot(genre_reigon_sales, aes(x = Genre, y = Sales, fill = highlight)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x = element_text(size = 8, angle = 90, vjust=0.5)) + 
+  scale_fill_manual(values = highlight_colors) +
+  facet_wrap(~ Region, scales = "free_y") +
+  labs(
+    title = "Genre Sales by Region",
+    x = "Genre",
+    y = "Total Sales (in millions)"
+  ) 
+```
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-### Question 2: Is there a relationship between user rating and sales? What about critic rating?
+All areas except for Japan have the same Top 3 Genres (Sports, Action,
+Shooting). Japan however, has Role-Playing, Platforming, and Sports as
+their top 3. Japan is a capital of video gaming. According to IMDb,
+there exists a genre titled JRPG - or Japanese Role Playing Games. This
+sub-genre contains popular titles such as Final Fantasy, Kingdom Hearts,
+and Persona 5. While those titles are popular even in the US, they are
+obviously extremely popular in Japanese culture given that they are in
+the sub-genre named after it. Source:
+<https://www.imdb.com/list/ls022397153/>
+
+#### How does Average Sales affect Popular Genres?
+
+``` r
+q1_data %>% mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Action-Adventure"), "yes", "no")) %>% ggplot( aes(x = Genre, y=Global_Sales, fill=highlight)) +
+  geom_bar(stat = "summary", fun = "mean", show.legend=FALSE) +
+  scale_fill_manual(values = highlight_colors) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylab("Total Sales (in millions)") + 
+  ggtitle("Average Sales by Genre")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+### Going into User and Critic Scores
+
+#### Do User and Critic Ratings Differ?
+
+``` r
+# Histogram: Distribution of Critic Scores
+ggplot(q2_data, aes(x = Critic_Score)) +
+  geom_histogram(show.legend = FALSE, binwidth = 1, fill = "#edb48c") +
+  labs(title = "Distribution of Critic Score", x = "Critic Score", y = "Count") + 
+  scale_x_continuous(breaks = seq(0, 10, by = 1), limits = c(0,11)) + 
+  ylim(0,100)
+```
+
+    ## Warning: Removed 2 rows containing missing values or values outside the scale range
+    ## (`geom_bar()`).
+
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
+# Histogram: Distribution of User Scores
+ggplot(q2_data, aes(x = User_Score)) +
+  geom_histogram(show.legend = FALSE, binwidth = 1, fill = "#edb48c") +
+  labs(title = "Distribution of User Score", x = "User Score", y = "Count") +
+  scale_x_continuous(breaks = seq(0, 10, by = 1), limits = c(0,11)) + 
+  ylim(0,100)
+```
+
+    ## Warning: Removed 2 rows containing missing values or values outside the scale range
+    ## (`geom_bar()`).
+
+![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+
+The distribution of user scores are Left Skewed with an average of
+8.54185. While critic scores are less (still left) skewed than user
+scpres. With an average of 8.162555
+
+``` r
+# Summary Statistics: Mean and Standard Deviation for Scores
+q2_data %>%
+  summarise(
+    avgCS = mean(Critic_Score), 
+    sdCs = sd(Critic_Score), 
+    avgUS = mean(User_Score), 
+    sdUs = sd(User_Score)
+  )
+```
+
+    ##      avgCS     sdCs   avgUS     sdUs
+    ## 1 8.162555 1.172003 8.54185 1.127281
+
+#### Do Scores Differ Between Users and Critics?
+
+``` r
+# Scatter Plot: Critic Score vs User Score
+ggplot(q2_data, aes(x = Critic_Score, y = User_Score)) +
+  geom_point() +
+  labs(title = "Critic Score vs User Score", x = "Critic Score", y = "User Score")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+There is definitely a correlation between Critic Score and User Score,
+but there is a notable difference as the scores get lower.
+
+#### Do Ratings Influence Sales?
 
 ``` r
 # Scatter plot for user score vs global sales
@@ -317,7 +436,22 @@ ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+``` r
+# Scatter plot for user score vs log global sales
+ggplot(q2_data, aes(x = User_Score, y = log(Global_Sales))) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "#de7e5d") +
+  labs(title = "User Score vs Log Global Sales", x = "User Score", y = "Log of Global Sales")
+```
+
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+    ## Warning: Removed 1 row containing non-finite outside the scale range
+    ## (`stat_smooth()`).
+
+![](README_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
 
 ``` r
 # Scatter plot for critic score vs global sales
@@ -329,13 +463,129 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
-# These scatter plots will visually explore potential correlations between scores (user and critic) and sales. Regression lines provide insights into the strength and direction of the relationships.
+# Scatter plot for critic score vs log global sales
+ggplot(q2_data, aes(x = Critic_Score, y = log(Global_Sales))) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "#de7e5d") +
+  labs(title = "Critic Score vs Log Global Sales", x = "Critic Score", y = "Log of Global Sales")
 ```
 
-### Question 3: Which platform had the most successful games?
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+    ## Warning: Removed 1 row containing non-finite outside the scale range
+    ## (`stat_smooth()`).
+
+![](README_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
+
+There is a very apparent log linear relationship between Sales and User
+Score. Critic reviews may hold more weight in shaping purchasing
+decisions because Less Deviance
+
+#### Do Scores Differ by Platform?
+
+``` r
+q2_platform <- q2_data %>%
+  group_by(Platform) %>%
+  summarise(
+    `Average User Score` = mean(User_Score, na.rm = TRUE),
+    `Average Critic Score` = mean(Critic_Score, na.rm = TRUE)
+  ) %>%
+  arrange(desc(`Average User Score`), desc(`Average Critic Score`))
+
+q2_platform
+```
+
+    ## # A tibble: 18 × 3
+    ##    Platform `Average User Score` `Average Critic Score`
+    ##    <chr>                   <dbl>                  <dbl>
+    ##  1 N64                      9.53                   9.63
+    ##  2 XB                       9.37                   9.3 
+    ##  3 PS4                      9                      9.05
+    ##  4 PSP                      8.8                    7.72
+    ##  5 PS2                      8.79                   8.82
+    ##  6 PS3                      8.71                   8.35
+    ##  7 PSN                      8.7                    7.7 
+    ##  8 NS                       8.68                   8.17
+    ##  9 PC                       8.6                    8.3 
+    ## 10 X360                     8.58                   8.26
+    ## 11 DS                       8.53                   8.32
+    ## 12 Wii                      8.35                   7.47
+    ## 13 NES                      8.2                   10   
+    ## 14 GC                       8.2                    7.85
+    ## 15 XOne                     8                      7.95
+    ## 16 PS                       7.94                   8.47
+    ## 17 3DS                      7.77                   8.13
+    ## 18 WiiU                     7.44                   7.48
+
+The Scores do differ by platform, but we noticed that there are more
+apparent patterns between Platform and Sales.
+
+### Going into Platform
+
+#### Which Platform Had the Best Selling Games?
+
+``` r
+# Add Company column to high_sales_platforms
+high_sales_platforms <- q1_data %>%
+  filter(
+         Platform %in% c("N64", "XB", "PS4", "PSP", "PS2", "PS3", "PSN", 
+                         "NS", "PC", "X360", "DS", "Wii", "NES", "GC", 
+                         "XOne", "PS")) %>%
+  mutate(
+    Company = case_when(
+      Platform %in% c("N64", "NS", "Wii", "DS", "NES", "GC") ~ "Nintendo",
+      Platform %in% c("PS", "PS2", "PS3", "PS4", "PSP", "PSN") ~ "Sony",
+      Platform %in% c("XB", "X360", "XOne") ~ "Microsoft",
+      Platform == "PC" ~ "PC"
+    )
+  )
+
+# Define custom color mapping
+company_colors <- c(
+  "Nintendo"  = "#F4A6A6",  # Pastel red
+  "Sony"      = "#A6B8E6",  # Pastel blue
+  "Microsoft" = "#A9D6A4",  # Pastel green
+  "PC"        = "#C0C0C0"   # Light gray
+)
+
+
+# Plot with custom colors
+ggplot(high_sales_platforms, aes(x = Platform, y = log(Global_Sales), fill = Company)) +
+  geom_boxplot(outlier.color = "red") +
+  scale_fill_manual(values = company_colors) +
+  labs(
+    title = "Distribution of Global Sales by Platform",
+    x = "Platform",
+    y = "Global Sales (in millions)",
+    fill = "Platform Brand"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold", size = 14)
+  )
+```
+
+    ## Warning: Removed 1250 rows containing non-finite outside the scale range
+    ## (`stat_boxplot()`).
+
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+We’re looking at the distribution of global sales across gaming
+platforms. Each box represents a platform, and it shows how game sales
+are spread out, from lower-performing titles to hits. If we look at the
+distribution, we’ll notice that Nintendo platforms like the NES
+(Nintendo Entertainment System) and Wii show a much wider spread, with
+some major outliers. The biggest outlier here, over 80 million units, is
+Wii Sports, which was bundled with the console and became one of the
+best-selling games of all time. So overall, Nintendo dominates in
+iconic, high-performing titles, and Sony and Microsoft stands out in
+consistent quality.
+
+#### Which Platform is the Best Selling Globally?
 
 ``` r
 # Define brand colors
@@ -382,11 +632,19 @@ ggplot(q1_platform, aes(x = reorder(Platform, -totalSales), y = totalSales, fill
   )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
-
-``` r
-# This will list the platforms ranked by total global sales. The platform with the highest total sales is deemed the most successful.
-```
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- --> We’re
+looking at total global sales across platforms, so instead of individual
+games, this is the sum of all game sales per platform. Right away, you
+can see that the PlayStation 2 is the highest. It’s the most successful
+platform globally, with over 1.25 billion units sold. After the
+PlayStation 2, we see strong performance from XBox 360, the PlayStation
+3, Wii, and DS. The bars are color-coded by brand, blue for Sony, green
+for Microsoft, red for Nintendo, and gray for PC, so we can get a sense
+of which companies had the biggest impact. It’s also worth noting that
+while Nintendo had some of the highest-selling individual games, like
+Wii Sports, Sony had more overall success when you look at total game
+sales across its platforms. So overall, this chart really highlights how
+dominant Sony, especially with the the PlayStation 2
 
 ``` r
 # Define company colors
@@ -448,175 +706,83 @@ ggplot(platform_region_sales, aes(x = reorder(Platform, -Sales), y = Sales, fill
   )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- --> This breaks
+down platform sales by region, so we can see which consoles were most
+popular in different parts of the world. Let’s start with North America
+and Europe. You’ll notice the pattern is pretty similar in both regions,
+the PlayStation 2 was popular, followed by Xbox 360, PlayStation 3, and
+Wii. These were the go-to consoles during the peak gaming years of the
+2000s. In the “Other” category, which consists of the rest of the world
+excluding Japan, we see the same top performers again: PlayStation 2,
+Xbox 360, PlayStation 3, and also PlayStation 4. But we should notice
+that things look very different in Japan. Here, Nintendo dominates,
+especially with the DS and NES. The PlayStation 2 is still in the most
+popular platforms, but Nintendo’s presence is much stronger compared to
+the rest of the world. That really highlights Japan’s different gaming
+culture and preference for handhelds and classic titles. The chart is
+once again color-coded by brand, making it easy spot which company led
+where. Overall, this comparison shows how Sony had global dominance, but
+Nintendo remained incredibly strong in Japan, with Microsoft’s biggest
+impact being in North America and Europe. This led us into thinking why
+does Japan stands out so much, not just in our data, but in the history
+of video games overall. As Blake Harris puts it in his book Console
+Wars: “Without the contributions of Japan, we wouldn’t have a video game
+industry.” That really sets the tone for understanding Japan’s
+influence. Looking at the data, the top platforms in Japan were the
+PlayStation 2, DS, standing for Dual Screen, PlayStation, and NES,
+standing for Nintendo Entertainment System. All of these consoles were
+created by Sony or Nintendo. Both of those companies were founded in
+Japan, with Nintendo headquartered in Kyoto, and Sony based in Tokyo.
+And according to CNN, Tokyo was the front leader for gaming, with both
+Nintendo and Sony having deep roots there. That historical presence
+helped shape Japan into a gaming powerhouse and explains why platform
+sales are especially high there. So when we see Japan’s platform
+preferences differ from other regions, it’s not random, it reflects deep
+cultural ties, brand loyalty, and the fact that Japan is a hub for
+gaming innovation.
+<https://www.cnn.com/2017/11/12/asia/future-japan-videogame-landmarks/index.html>
+As said by CNN, Tokyo was the front leader for gaming with SEGA and
+Nintendo originating there. This explains the platforming being higher.
 
-### Question 4: Which platform’s games have the best rating?
-
-``` r
-q2_platform <- q2_data %>%
-  group_by(Platform) %>%
-  summarise(
-    avgUserScore = mean(User_Score, na.rm = TRUE),
-    avgCriticScore = mean(Critic_Score, na.rm = TRUE)
-  ) %>%
-  arrange(desc(avgUserScore), desc(avgCriticScore))
-
-q2_platform
-```
-
-    ## # A tibble: 18 × 3
-    ##    Platform avgUserScore avgCriticScore
-    ##    <chr>           <dbl>          <dbl>
-    ##  1 N64              9.53           9.63
-    ##  2 XB               9.37           9.3 
-    ##  3 PS4              9              9.05
-    ##  4 PSP              8.8            7.72
-    ##  5 PS2              8.79           8.82
-    ##  6 PS3              8.71           8.35
-    ##  7 PSN              8.7            7.7 
-    ##  8 NS               8.68           8.17
-    ##  9 PC               8.6            8.3 
-    ## 10 X360             8.58           8.26
-    ## 11 DS               8.53           8.32
-    ## 12 Wii              8.35           7.47
-    ## 13 NES              8.2           10   
-    ## 14 GC               8.2            7.85
-    ## 15 XOne             8              7.95
-    ## 16 PS               7.94           8.47
-    ## 17 3DS              7.77           8.13
-    ## 18 WiiU             7.44           7.48
-
-``` r
-# Platforms are ranked based on average user and critic scores. A high average score might indicate quality gaming experiences on that platform
-```
-
-### Question 5: What does game success (sales) look like for each platform?
+### Year Graphs
 
 ``` r
-# data %>% filter(Platform %in% c("N64", "XB","PS4", "PSP", "PS2", "PS3", "PSN", "NS", "PC", "X360", "DS", "Wii", "NES", "GC", "XOne", "PS", ""), Global_Sales > 5) %>% ggplot(aes(x=Platform, y=Global_Sales)) + geom_boxplot()
-```
-
-``` r
-# Add Company column to high_sales_platforms
-high_sales_platforms <- q1_data %>%
-  filter(Global_Sales > 5,
-         Platform %in% c("N64", "XB", "PS4", "PSP", "PS2", "PS3", "PSN", 
-                         "NS", "PC", "X360", "DS", "Wii", "NES", "GC", 
-                         "XOne", "PS")) %>%
-  mutate(
-    Company = case_when(
-      Platform %in% c("N64", "NS", "Wii", "DS", "NES", "GC") ~ "Nintendo",
-      Platform %in% c("PS", "PS2", "PS3", "PS4", "PSP", "PSN") ~ "Sony",
-      Platform %in% c("XB", "X360", "XOne") ~ "Microsoft",
-      Platform == "PC" ~ "PC"
-    )
-  )
-
-# Define custom color mapping
-company_colors <- c(
-  "Nintendo"  = "#F4A6A6",  # Pastel red
-  "Sony"      = "#A6B8E6",  # Pastel blue
-  "Microsoft" = "#A9D6A4",  # Pastel green
-  "PC"        = "#C0C0C0"   # Light gray
-)
-
-
-# Plot with custom colors
-ggplot(high_sales_platforms, aes(x = Platform, y = Global_Sales, fill = Company)) +
-  geom_boxplot(outlier.color = "red") +
-  scale_fill_manual(values = company_colors) +
+ q1_data %>%
+  ggplot(aes(x = Year, y = Global_Sales)) +
+  geom_col() +
   labs(
-    title = "Distribution of Global Sales by Platform",
-    x = "Platform",
-    y = "Global Sales (in millions)",
-    fill = "Platform Brand"
+    title = "Global Video Game Sales Over Time",
+    x = "Year",
+    y = "Global Sales (in millions)"
   ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    plot.title = element_text(face = "bold", size = 14)
-  )
-```
-
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
-
-### Question 6: What years were most successful for video games?
-
-``` r
-q1_data %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col()
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(labels = scales::comma)
 ```
 
     ## Warning: Removed 84 rows containing missing values or values outside the scale range
     ## (`geom_col()`).
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
-
-### Question 7: During the best years, which genres were most popular?
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
-q1_data %>% filter(between(Year, 2005, 2015)) %>% ggplot(aes(x = Year, y = Global_Sales)) + geom_col() + facet_wrap(~Genre) + theme(axis.text.x = element_blank(), axis.title.x= element_blank())
-```
-
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
-
-### Question 8: What is the most popular genre by area?
-
-``` r
-genre_reigon_sales <- q1_data %>%
-  group_by(Genre) %>%
-  summarise(
-    NA_Sales = sum(NA_Sales, na.rm = TRUE),
-    PAL_Sales = sum(PAL_Sales, na.rm = TRUE),
-    JP_Sales = sum(JP_Sales, na.rm = TRUE),
-    Other_Sales = sum(Other_Sales, na.rm = TRUE)
-  ) %>%
-  pivot_longer(
-    cols = c(NA_Sales, PAL_Sales, JP_Sales, Other_Sales),
-    names_to = "Region",
-    values_to = "Sales"
-  ) %>%
-  mutate(
-    Region = recode(Region,
-                    "NA_Sales" = "North America",
-                    "PAL_Sales" = "Europe",
-                    "JP_Sales" = "Japan",
-                    "Other_Sales" = "Other"),
-    highlight = if_else(
-      ((Region == "Japan" & (Genre %in% c("Role-Playing", "Platform", "Sports"))) |
-         (Region != "Japan" & (Genre %in% c("Sports", "Action", "Shooter")))
-         ),"yes", "no" )
-  )
-
-highlight_colors <- c(
-  "yes"  = "#de7e5d",  # Pastel red
-  "no"      = "#edb48c"  # Pastel blue
-)
-
-
-ggplot(genre_reigon_sales, aes(x = Genre, y = Sales, fill = highlight)) +
-  geom_col(show.legend = FALSE) +
-  theme(axis.text.x = element_text(size = 8, angle = 90, vjust=0.5)) + 
-  scale_fill_manual(values = highlight_colors) +
-  facet_wrap(~ Region, scales = "free_y") +
+q1_data %>%
+  filter(between(Year, 2005, 2015)) %>%
+  ggplot(aes(x = Year, y = Global_Sales)) +
+  geom_col() +
+  facet_wrap(~Genre) +
   labs(
-    title = "Genre Sales by Region",
-    x = "Genre",
-    y = "Total Sales (in millions)"
-  ) 
+    title = "Global Video Game Sales (2005-2015) by Genre",
+    x = "Year",
+    y = "Global Sales (in millions)"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) +
+  scale_y_continuous(labels = scales::comma)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
-
-``` r
-q1_data %>% mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Action-Adventure"), "yes", "no")) %>% ggplot( aes(x = Genre, y=Global_Sales, fill=highlight)) +
-  geom_bar(stat = "summary", fun = "mean", show.legend=FALSE) +
-  scale_fill_manual(values = highlight_colors) +
-  theme(axis.text.x = element_text(angle = 90)) +
-  ylab("Total Sales (in millions)") + 
-  ggtitle("Average Sales by Genre")
-```
-
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ## Conclusion
 
@@ -656,3 +822,20 @@ q1_data %>% mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Action-
     are Platform, Role-Playing, and Sports. Role-Playing being the
     significantly most popular game genre. This shows the cultural
     difference between the Americas and Japan.
+
+### Further Questions
+
+A few questions we’d like to explore in the future: First, how do
+digital-only games compare to physical releases in terms of both sales
+and ratings? As digital distribution grows, this could reveal important
+changes in consumer behavior. Second, what role do major game franchises
+play in driving platform success? For example, how much do flagship
+titles like Call of Duty or Mario influence console popularity? Third,
+are strong marketing campaigns or optimal release timing more
+influential on sales than ratings alone? This would help us understand
+if visibility can sometimes outweigh quality in determining success. And
+finally, how has the rise of mobile and indie games shifted genre trends
+over time? These newer segments may be reshaping the industry in ways
+that traditional data doesn’t fully capture yet. These questions could
+offer deeper insights into how the video game landscape continues to
+evolve.
