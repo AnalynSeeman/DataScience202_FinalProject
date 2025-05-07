@@ -98,6 +98,8 @@ head(data)
 library(dplyr)
 ```
 
+    ## Warning: package 'dplyr' was built under R version 4.4.3
+
     ## 
     ## Attaching package: 'dplyr'
 
@@ -272,10 +274,17 @@ q1_genre
     ## 20 Board Game             0.33
 
 ``` r
-ggplot(q1_genre, aes(x = Genre, weight= totalSales)) +
-  geom_bar() +
+highlight_colors <- c(
+  "yes"  = "#de7e5d",  # Pastel red
+  "no"      = "#edb48c"  # Pastel blue
+)
+
+q1_data %>% mutate(highlight = if_else(Genre %in% c("Sports", "Action", "Shooter"), "yes", "no")) %>% ggplot( aes(x = Genre, weight= Global_Sales, fill=highlight)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values = highlight_colors) +
   theme(axis.text.x = element_text(angle = 90)) +
-  ylab("Total Sales")
+  ylab("Total Sales") + 
+  ggtitle("Global Sales by Genre")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
@@ -553,40 +562,61 @@ q1_data %>% filter(between(Year, 2005, 2015)) %>% ggplot(aes(x = Year, y = Globa
 ### Question 8: What is the most popular genre by area?
 
 ``` r
-q1_data %>% ggplot(aes(x = Genre, y = NA_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
-```
+genre_reigon_sales <- q1_data %>%
+  group_by(Genre) %>%
+  summarise(
+    NA_Sales = sum(NA_Sales, na.rm = TRUE),
+    PAL_Sales = sum(PAL_Sales, na.rm = TRUE),
+    JP_Sales = sum(JP_Sales, na.rm = TRUE),
+    Other_Sales = sum(Other_Sales, na.rm = TRUE)
+  ) %>%
+  pivot_longer(
+    cols = c(NA_Sales, PAL_Sales, JP_Sales, Other_Sales),
+    names_to = "Region",
+    values_to = "Sales"
+  ) %>%
+  mutate(
+    Region = recode(Region,
+                    "NA_Sales" = "North America",
+                    "PAL_Sales" = "Europe",
+                    "JP_Sales" = "Japan",
+                    "Other_Sales" = "Other"),
+    highlight = if_else(
+      ((Region == "Japan" & (Genre %in% c("Role-Playing", "Platform", "Sports"))) |
+         (Region != "Japan" & (Genre %in% c("Sports", "Action", "Shooter")))
+         ),"yes", "no" )
+  )
 
-    ## Warning: Removed 6645 rows containing missing values or values outside the scale range
-    ## (`geom_col()`).
+highlight_colors <- c(
+  "yes"  = "#de7e5d",  # Pastel red
+  "no"      = "#edb48c"  # Pastel blue
+)
+
+
+ggplot(genre_reigon_sales, aes(x = Genre, y = Sales, fill = highlight)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x = element_text(size = 8, angle = 90, vjust=0.5)) + 
+  scale_fill_manual(values = highlight_colors) +
+  facet_wrap(~ Region, scales = "free_y") +
+  labs(
+    title = "Genre Sales by Region",
+    x = "Genre",
+    y = "Total Sales (in millions)"
+  ) 
+```
 
 ![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
-q1_data %>% ggplot(aes(x = Genre, y = PAL_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
+q1_data %>% mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Action-Adventure"), "yes", "no")) %>% ggplot( aes(x = Genre, y=Global_Sales, fill=highlight)) +
+  geom_bar(stat = "summary", fun = "mean", show.legend=FALSE) +
+  scale_fill_manual(values = highlight_colors) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylab("Total Sales (in millions)") + 
+  ggtitle("Average Sales by Genre")
 ```
 
-    ## Warning: Removed 6282 rows containing missing values or values outside the scale range
-    ## (`geom_col()`).
-
-![](README_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
-
-``` r
-q1_data %>% ggplot(aes(x = Genre, y = JP_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
-```
-
-    ## Warning: Removed 12628 rows containing missing values or values outside the scale range
-    ## (`geom_col()`).
-
-![](README_files/figure-gfm/unnamed-chunk-17-3.png)<!-- -->
-
-``` r
-q1_data %>% ggplot(aes(x = Genre, y = Other_Sales)) + geom_col() + theme(axis.text.x = element_text(size = 8, angle = 45, vjust=0.5))
-```
-
-    ## Warning: Removed 3937 rows containing missing values or values outside the scale range
-    ## (`geom_col()`).
-
-![](README_files/figure-gfm/unnamed-chunk-17-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 ## Conclusion
 
