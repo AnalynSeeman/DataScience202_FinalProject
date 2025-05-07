@@ -115,7 +115,7 @@ q1_data <- data %>%
 
 q2_data <- q1_data %>%
   drop_na(Critic_Score) %>%
-  drop_na(User_Score) #dropping games with no available Sale data
+  drop_na(User_Score)   #dropping games with no available Sale data
 
 ```
 
@@ -187,27 +187,115 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 ### Question 3: Which platform had the most successful games?
 
 ```{r}
+
+# Define brand colors
+company_colors <- c(
+  "Nintendo"  = "#F4A6A6",  # Pastel red
+  "Sony"      = "#A6B8E6",  # Pastel blue
+  "Microsoft" = "#A9D6A4",  # Pastel green
+  "PC"        = "#C0C0C0"   # Light gray
+)
+
+# Add Company info to platform summary
 q1_platform <- q1_data %>%
   group_by(Platform) %>%
-  summarise(totalSales = sum(Global_Sales)) %>%
+  summarise(totalSales = sum(Global_Sales, na.rm = TRUE)) %>%
+  mutate(
+    Company = case_when(
+      Platform %in% c("N64", "NS", "Wii", "DS", "NES", "GC") ~ "Nintendo",
+      Platform %in% c("PS", "PS2", "PS3", "PS4", "PSP", "PSN") ~ "Sony",
+      Platform %in% c("XB", "X360", "XOne") ~ "Microsoft",
+      Platform == "PC" ~ "PC",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  filter(Company != "Other") %>%
   arrange(desc(totalSales))
 
-q1_platform
-
-ggplot(q1_platform, 
-       aes(
-         x = reorder(Platform, -totalSales), 
-         y = totalSales)
-       ) +
-  geom_bar(stat = "identity") +
-  labs(title = "Total Global Sales by Platform",
-       x = "Platform",
-       y = "Total Global Sales (in millions)") +
+# Plot with color-coded bars
+ggplot(q1_platform, aes(x = reorder(Platform, -totalSales), y = totalSales, fill = Company)) +
+  geom_col() +
+  scale_fill_manual(values = company_colors) +
+  labs(
+    title = "Total Global Sales by Platform",
+    subtitle = "Color-coded by Platform Brand",
+    x = "Platform",
+    y = "Total Global Sales (in millions)",
+    fill = "Brand"
+  ) +
+  scale_y_continuous(labels = scales::comma_format()) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
+    axis.text.y = element_text(size = 10)
+  )
 
 
 # This will list the platforms ranked by total global sales. The platform with the highest total sales is deemed the most successful.
+```
+
+```{r}
+
+# Define company colors
+company_colors <- c(
+  "Nintendo"  = "#F4A6A6",  # Pastel red
+  "Sony"      = "#A6B8E6",  # Pastel blue
+  "Microsoft" = "#A9D6A4",  # Pastel green
+  "PC"        = "#C0C0C0"   # Light gray
+)
+
+# Summarize and reshape data
+platform_region_sales <- q1_data %>%
+  group_by(Platform) %>%
+  summarise(
+    NA_Sales = sum(NA_Sales, na.rm = TRUE),
+    PAL_Sales = sum(PAL_Sales, na.rm = TRUE),
+    JP_Sales = sum(JP_Sales, na.rm = TRUE),
+    Other_Sales = sum(Other_Sales, na.rm = TRUE)
+  ) %>%
+  pivot_longer(
+    cols = c(NA_Sales, PAL_Sales, JP_Sales, Other_Sales),
+    names_to = "Region",
+    values_to = "Sales"
+  ) %>%
+  mutate(
+    Region = recode(Region,
+                    "NA_Sales" = "North America",
+                    "PAL_Sales" = "Europe",
+                    "JP_Sales" = "Japan",
+                    "Other_Sales" = "Other"),
+    Company = case_when(
+      Platform %in% c("N64", "NS", "Wii", "DS", "NES", "GC") ~ "Nintendo",
+      Platform %in% c("PS", "PS2", "PS3", "PS4", "PSP", "PSN") ~ "Sony",
+      Platform %in% c("XB", "X360", "XOne") ~ "Microsoft",
+      Platform == "PC" ~ "PC",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  filter(Company != "Other")  # remove unknown brands
+
+# Plot: Facet by Region, color by Company
+ggplot(platform_region_sales, aes(x = reorder(Platform, -Sales), y = Sales, fill = Company)) +
+  geom_col(show.legend = TRUE) +
+  scale_fill_manual(values = company_colors) +
+  facet_wrap(~ Region, scales = "free_y") +
+  labs(
+    title = "Platform Sales by Region",
+    x = "Platform",
+    y = "Total Sales (in millions)",
+    fill = "Brand"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 10, angle = 60, hjust = 1, vjust = 1),
+    strip.placement = "outside",
+    strip.background = element_blank(),
+    panel.spacing = unit(1.5, "lines"),
+    plot.title = element_text(face = "bold", size = 16)
+  )
+
+
 ```
 
 ### Question 4: Which platform's games have the best rating?
@@ -229,7 +317,52 @@ q2_platform
 ### Question 5: What does game success (sales) look like for each platform?
 
 ```{r}
-data %>% filter(Platform %in% c("N64", "XB","PS4", "PSP", "PS2", "PS3", "PSN", "NS", "PC", "X360", "DS", "Wii", "NES", "GC", "XOne", "PS", ""), Global_Sales > 5) %>% ggplot(aes(x=Platform, y=Global_Sales)) + geom_boxplot()
+# data %>% filter(Platform %in% c("N64", "XB","PS4", "PSP", "PS2", "PS3", "PSN", "NS", "PC", "X360", "DS", "Wii", "NES", "GC", "XOne", "PS", ""), Global_Sales > 5) %>% ggplot(aes(x=Platform, y=Global_Sales)) + geom_boxplot()
+
+```
+
+```{r}
+
+# Add Company column to high_sales_platforms
+high_sales_platforms <- q1_data %>%
+  filter(Global_Sales > 5,
+         Platform %in% c("N64", "XB", "PS4", "PSP", "PS2", "PS3", "PSN", 
+                         "NS", "PC", "X360", "DS", "Wii", "NES", "GC", 
+                         "XOne", "PS")) %>%
+  mutate(
+    Company = case_when(
+      Platform %in% c("N64", "NS", "Wii", "DS", "NES", "GC") ~ "Nintendo",
+      Platform %in% c("PS", "PS2", "PS3", "PS4", "PSP", "PSN") ~ "Sony",
+      Platform %in% c("XB", "X360", "XOne") ~ "Microsoft",
+      Platform == "PC" ~ "PC"
+    )
+  )
+
+# Define custom color mapping
+company_colors <- c(
+  "Nintendo"  = "#F4A6A6",  # Pastel red
+  "Sony"      = "#A6B8E6",  # Pastel blue
+  "Microsoft" = "#A9D6A4",  # Pastel green
+  "PC"        = "#C0C0C0"   # Light gray
+)
+
+
+# Plot with custom colors
+ggplot(high_sales_platforms, aes(x = Platform, y = Global_Sales, fill = Company)) +
+  geom_boxplot(outlier.color = "red") +
+  scale_fill_manual(values = company_colors) +
+  labs(
+    title = "Distribution of Global Sales by Platform",
+    x = "Platform",
+    y = "Global Sales (in millions)",
+    fill = "Platform Brand"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold", size = 14)
+  )
+
 
 ```
 
@@ -273,10 +406,10 @@ q1_data %>% ggplot(aes(x = Genre, y = Other_Sales)) + geom_col() + theme(axis.te
 
 3.  The most successful platform in terms of global sales is PS2.
 
-4.  XB is home to games with the best average ratings, solidifying its
-    reputation for quality.
+4.  X-Box is home to games with the best average ratings, solidifying
+    its reputation for quality.
 
-5.  While XBox has the best average rating, nintendo has the best sales
+5.  While X-Box has the best average rating, Nintendo has the best sales
     according to this data. The NES and Wii have the highest Q3 of
     Global Sales, with Wii having the most successful game.
 
