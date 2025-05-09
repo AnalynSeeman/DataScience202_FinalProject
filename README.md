@@ -865,8 +865,6 @@ have sold better when you total them up overall.
 
 ## Conclusion
 
-\##Conclusion Statistic
-
 ``` r
 q1_data %>% arrange(desc(Global_Sales)) %>% select(Name, Genre, Platform, JP_Sales, Global_Sales) %>% head(6)
 ```
