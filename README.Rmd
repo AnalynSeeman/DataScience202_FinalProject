@@ -32,22 +32,21 @@ To guide our analysis, we focus on the following research questions:
 
 1.  Which genre has the best sales?
 
-2.  Is there a relationship between user rating and sales? What about
+2.  How does reigon affect the most popular genre? If there are differences, why does that happen?
+
+3.  How do popular genres change over the years?
+
+4.  How do critic scores differ from user scores?
+
+5.  Is there a relationship between user rating and sales? What about
     critic rating in sales? Which one would be better marker for a
     bestseller?
 
-3.  Which platform had the most successful games?
+6.  Which platform's games have the best rating? 
 
-4.  Which platform's games have the best rating? Does platform affect
-    the above questions?
+7.  Which platform performs the best in total sales? What does range of sales look like per platform?
 
-5.  What is the most popular genre per platform?
-
-6.  What years were most successful for video games
-
-7.  During the best years, which genres were most popular?
-
-8.  What is the most popular genre by area?
+8.  How do platform sales vary by year?
 
 By answering these questions, we aim to identify key trends that
 influence the success of a video game. The insights gained from this
@@ -268,22 +267,24 @@ avg_sales_by_genre_by_year <- q1_data %>%
 
 
 avg_sales_by_genre_by_year %>%
-  filter(Year > 2000) %>%
-  ggplot(aes(x = Year, y = avg_sales)) +
-  geom_col() +
-  facet_wrap(~Genre) +
+  ggplot(aes(x = Year, y = avg_sales, group = Genre)) +
+  geom_line(aes(color = Genre)) +
+  guides(color = guide_legend(ncol = 2)) + 
   labs(
-    title = "Average Genre Sales by Year (After 2000)",
+    title = "Average Genre Sales by Year",
     x = "Year",
-    y = "Global Sales (in millions)"
+    y = " Average Global Sales (in millions)"
   ) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
     axis.title.x = element_text(margin = margin(t = 10))
   ) +
   scale_y_continuous(labels = scales::comma)
+  
 
 ```
+
+As we can see, there is a very high spike for both shooter and platform. This shows how they are the two very strong genres - one in average and one in total. 
 
 ### Going into User and Critic Scores
 
@@ -605,13 +606,6 @@ As said by CNN, Tokyo was the front leader for gaming with SEGA and
 Nintendo originating there. This explains the platforming being higher.
 
 ``` {r}
-# Define brand colors
-company_colors <- c(
-  "Nintendo"  = "#F4A6A6",  # Pastel red
-  "Sony"      = "#A6B8E6",  # Pastel blue
-  "Microsoft" = "#A9D6A4",  # Pastel green
-  "PC"        = "#C0C0C0"   # Light gray
-)
 
 # Add Company info to platform summary
 q1_platform_avg_year <- q1_data %>%
@@ -630,14 +624,14 @@ q1_platform_avg_year <- q1_data %>%
   arrange(desc(avg_sales))
 
 q1_platform_avg_year %>%
-  filter(Year > 2000) %>%
-  ggplot(aes(x = Year, y = avg_sales)) +
-  geom_col() +
-  facet_wrap(~Platform) +
+  ggplot(aes(x = Year, y = avg_sales, group = Platform, color = Platform)) +
+  scale_fill_manual(values = company_colors) +
+  guides(color = guide_legend(ncol = 2)) + 
+  geom_line() +
   labs(
-    title = "Average Genre Sales by Year (After 2000)",
+    title = "Average Platform Sales by Year",
     x = "Year",
-    y = "Global Sales (in millions)"
+    y = "Average Global Sales (in millions)"
   ) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
@@ -646,46 +640,56 @@ q1_platform_avg_year %>%
   scale_y_continuous(labels = scales::comma)
 
 ```
-
+THe platforms that seem to have incredible spikes are the NES, the PC, Wii, and PS4. This is contradictory to our Total Sales chart and it shows how while console like the NES have higher averages at times, other consoles have sold better when you total them up overall.
 
 ## Conclusion
 
-1.  The genre with the best sales is Sports, highlighting its popularity
-    among players worldwide.
+##Conclusion Statistic
 
-2.  There is a positive but not particularly strong relationship between
-    both user and critic ratings and global sales. Higher scores
-    generally align with better sales, but other variables clearly play
-    a role. A moderate/strong relationship exists between critic ratings
-    and global sales, suggesting their importance as a marker for
-    potential bestsellers. This may indicate that critic ratings carry
-    more weight or visibility in influencing purchasing decisions.
+``` {r}
+q1_data %>% arrange(desc(Global_Sales)) %>% select(Name, Genre, Platform, JP_Sales, Global_Sales) %>% head(6)
 
-3.  The most successful platform in terms of global sales is PS2.
+```
 
-4.  X-Box is home to games with the best average ratings, solidifying
-    its reputation for quality.
+To conclude, these top 6 games showcase our results very clearly. The top 2 genres, one in Total and one in Average, are Sports and Platform. When you look at the platform you can clearly see Nintendo's domination in the top performers of video game sales. Furthermore, you can see how the Role-Playing genre is more popular in Japan than any other genre. 
 
-5.  While X-Box has the best average rating, Nintendo has the best sales
-    according to this data. The NES and Wii have the highest Q3 of
-    Global Sales, with Wii having the most successful game.
+To specify, here are the answers to the questions that we set out to answer:
 
-6.  We can see the rise of video games in the 2000's with it peaking
-    around 2009. From there it gently declines with a sharp decrease
-    in 2020. Was this because of data collection and a bias within the
-    data, or for actual reasons? Perhaps the pandemic has caused a
-    decline in sales recently.
 
-7.  This further shows the popularity of the sports genre, as it is the
-    genre with the highest number of sales in all of the genres. Close
-    behind, Shooter and Action are also very popular.
+1.  Which genre has the best sales?
 
-8.  While most areas, such as North America, follow the same pattern
-    with Action, Shooter, and Sports being the top 3 games, JP follows a
-    different trend. JP stands for Japan. Japan's top performing genres
-    are Platform, Role-Playing, and Sports. Role-Playing being the
-    significantly most popular game genre. This shows the cultural
-    difference between the Americas and Japan.
+The genre with the best sales is Sports, highlighting its popularity among players worldwide.
+
+2.  How does reigon affect the most popular genre? If there are differences, why does that happen?
+
+While most areas, such as North America, follow the same pattern with Action, Shooter, and Sports being the top 3 games, JP follows a different trend. JP stands for Japan. Japan's top performing genres are Platform, Role-Playing, and Sports. Role-Playing being the significantly most popular game genre. This shows the cultural difference between the Americas and Japan.
+
+3.  How do popular genres change over the years?
+
+At some times the most popular genre is Shooter and at other times it is Platform. This shows how the most popular genres by Total and by Average really do dominate across the years.
+
+4.  How do critic scores differ from user scores?
+
+Critic scores on average are lower than user scores. This implies that they are more likely to rate a game lower than users, which shows how they are similar to their name and are very critical.
+
+5.  Is there a relationship between user rating and sales? What about
+    critic rating in sales? Which one would be better marker for a
+    bestseller?
+    
+There is a positive but not particularly strong relationship between both user and critic ratings and global sales. Higher scores generally align with better sales, but other variables clearly play a role. A moderate/strong relationship exists between critic ratings and global sales, suggesting their importance as a marker for potential bestsellers. This may indicate that critic ratings carry more weight or visibility in influencing purchasing decisions.
+
+6.  Which platform's games have the best rating? 
+
+X-Box is home to games with the best average ratings, solidifying its reputation for quality.
+
+7.  Which platform performs the best in total sales? What does range of sales look like per platform?
+
+While X-Box has the best average rating, Nintendo has the best sales according to this data. The NES and Wii have the highest Q3 of Global Sales, with Wii having the most successful game.
+
+8.  How do platform sales vary by year?
+
+Platform popularity changes drastically by year, with some platforms like the NES and Wii dominating at certain times. Those platforms, however, do not align with the overall best performing total sales platforms. This showcases the difference betweem momentary greatness and steady performance.
+
 
 ### Further Questions
 
