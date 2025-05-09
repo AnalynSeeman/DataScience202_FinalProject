@@ -269,15 +269,21 @@ q1_genre
 
 ``` r
 highlight_colors <- c(
-  "yes"  = "#de7e5d",  # Pastel red
-  "no"      = "#edb48c"  # Pastel blue
+  "yes" = "#de7e5d",    # Pastel red
+  "no"  = "#edb48c"     # Pastel peach
 )
 
-q1_data %>% mutate(highlight = if_else(Genre %in% c("Sports", "Action", "Shooter"), "yes", "no")) %>% ggplot( aes(x = Genre, weight= Global_Sales, fill=highlight)) +
-  geom_bar(show.legend = FALSE) +
+q1_data %>%
+  mutate(highlight = if_else(Genre %in% c("Sports", "Action", "Shooter"), "yes", "no")) %>%
+  group_by(Genre, highlight) %>%
+  summarise(total_sales = sum(Global_Sales, na.rm = TRUE), .groups = "drop") %>%
+  ggplot(aes(x = reorder(Genre, -total_sales), y = total_sales, fill = highlight)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
   scale_fill_manual(values = highlight_colors) +
+  theme_minimal() +
   theme(axis.text.x = element_text(angle = 90)) +
-  ylab("Total Sales") + 
+  xlab("Genre") +
+  ylab("Total Sales (in millions)") +
   ggtitle("Global Sales by Genre")
 ```
 
@@ -318,7 +324,7 @@ genre_reigon_sales <- q1_data %>%
   )
 
 highlight_colors <- c(
-  "yes"  = "#de7e5d",  # Pastel red
+  "yes"  = "#de7e5d",    # Pastel red
   "no"      = "#edb48c"  # Pastel blue
 )
 
