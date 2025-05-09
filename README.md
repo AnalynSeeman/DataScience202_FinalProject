@@ -356,11 +356,32 @@ the sub-genre named after it. Source:
 #### How does Average Sales affect Popular Genres?
 
 ``` r
-q1_data %>% mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Action-Adventure"), "yes", "no")) %>% ggplot( aes(x = Genre, y=Global_Sales, fill=highlight)) +
-  geom_bar(stat = "summary", fun = "mean", show.legend=FALSE) +
+# q1_data %>% mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Action-Adventure"), "yes", "no")) %>% ggplot( aes(x = Genre, y=Global_Sales, fill=highlight)) +
+#   geom_bar(stat = "summary", fun = "mean", show.legend=FALSE) +
+#   scale_fill_manual(values = highlight_colors) +
+#   theme(axis.text.x = element_text(angle = 90)) +
+#   ylab("Total Sales (in millions)") +
+#   ggtitle("Average Sales by Genre")
+
+highlight_colors <- c(
+  "yes" = "#de7e5d",    # Pastel red
+  "no"  = "#edb48c"     # Pastel peach
+)
+
+# Compute average sales per genre with highlight
+avg_sales_by_genre <- q1_data %>%
+  mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Platform"), "yes", "no")) %>%
+  group_by(Genre, highlight) %>%
+  summarise(avg_sales = mean(Global_Sales, na.rm = TRUE), .groups = "drop")
+
+# Plot with genres ordered by average sales
+ggplot(avg_sales_by_genre, aes(x = reorder(Genre, -avg_sales), y = avg_sales, fill = highlight)) +
+  geom_col(show.legend = FALSE) +
   scale_fill_manual(values = highlight_colors) +
+  theme_minimal() +
   theme(axis.text.x = element_text(angle = 90)) +
-  ylab("Total Sales (in millions)") + 
+  xlab("Genre") +
+  ylab("Average Sales (in millions)") +
   ggtitle("Average Sales by Genre")
 ```
 
