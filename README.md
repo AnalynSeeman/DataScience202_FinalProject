@@ -96,6 +96,8 @@ head(data)
 library(dplyr)
 ```
 
+    ## Warning: package 'dplyr' was built under R version 4.4.3
+
     ## 
     ## Attaching package: 'dplyr'
 
@@ -329,7 +331,7 @@ highlight_colors <- c(
 )
 
 
-ggplot(genre_reigon_sales, aes(x = Genre, y = Sales, fill = highlight)) +
+ggplot(genre_reigon_sales, aes(reorder(Genre, -Sales), y = Sales, fill = highlight)) +
   geom_col(show.legend = FALSE) +
   theme(axis.text.x = element_text(size = 8, angle = 90, vjust=0.5)) + 
   scale_fill_manual(values = highlight_colors) +
@@ -356,13 +358,6 @@ the sub-genre named after it. Source:
 #### How does Average Sales affect Popular Genres?
 
 ``` r
-# q1_data %>% mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Action-Adventure"), "yes", "no")) %>% ggplot( aes(x = Genre, y=Global_Sales, fill=highlight)) +
-#   geom_bar(stat = "summary", fun = "mean", show.legend=FALSE) +
-#   scale_fill_manual(values = highlight_colors) +
-#   theme(axis.text.x = element_text(angle = 90)) +
-#   ylab("Total Sales (in millions)") +
-#   ggtitle("Average Sales by Genre")
-
 highlight_colors <- c(
   "yes" = "#de7e5d",    # Pastel red
   "no"  = "#edb48c"     # Pastel peach
@@ -385,7 +380,39 @@ ggplot(avg_sales_by_genre, aes(x = reorder(Genre, -avg_sales), y = avg_sales, fi
   ggtitle("Average Sales by Genre")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- --> This shows
+that the average is different than the total. The top 3 genres for
+average sales is Sandbox, Party, and Platform. This implies that while
+Shooter games bring in the most total money, that there are a lot of
+them and the genre is oversaturated. Sandbox games are the ones that
+consistently perform better per game.
+
+``` r
+avg_sales_by_genre_by_year <- q1_data %>%
+  mutate(highlight = if_else(Genre %in% c("Sandbox", "Party", "Platform"), "yes", "no")) %>%
+  group_by(Genre, highlight, Year) %>%
+  summarise(avg_sales = mean(Global_Sales, na.rm = TRUE), .groups = "drop")
+
+
+
+avg_sales_by_genre_by_year %>%
+  filter(Year > 2000) %>%
+  ggplot(aes(x = Year, y = avg_sales)) +
+  geom_col() +
+  facet_wrap(~Genre) +
+  labs(
+    title = "Average Genre Sales by Year (After 2000)",
+    x = "Year",
+    y = "Global Sales (in millions)"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) +
+  scale_y_continuous(labels = scales::comma)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ### Going into User and Critic Scores
 
@@ -403,7 +430,7 @@ ggplot(q2_data, aes(x = Critic_Score)) +
     ## Warning: Removed 2 rows containing missing values or values outside the scale range
     ## (`geom_bar()`).
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 # Histogram: Distribution of User Scores
@@ -417,11 +444,12 @@ ggplot(q2_data, aes(x = User_Score)) +
     ## Warning: Removed 2 rows containing missing values or values outside the scale range
     ## (`geom_bar()`).
 
-![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
 
 The distribution of user scores are Left Skewed with an average of
 8.54185. While critic scores are less (still left) skewed than user
-scpres. With an average of 8.162555
+scores. With an average of 8.162555. This implies that critics are
+actually more critical than users as they rate the games lower.
 
 ``` r
 # Summary Statistics: Mean and Standard Deviation for Scores
@@ -446,7 +474,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = User_Score)) +
   labs(title = "Critic Score vs User Score", x = "Critic Score", y = "User Score")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 There is definitely a correlation between Critic Score and User Score,
 but there is a notable difference as the scores get lower.
@@ -463,7 +491,7 @@ ggplot(q2_data, aes(x = User_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 # Scatter plot for user score vs log global sales
@@ -478,7 +506,7 @@ ggplot(q2_data, aes(x = User_Score, y = log(Global_Sales))) +
     ## Warning: Removed 1 row containing non-finite outside the scale range
     ## (`stat_smooth()`).
 
-![](README_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
 
 ``` r
 # Scatter plot for critic score vs global sales
@@ -490,7 +518,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = Global_Sales)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
 # Scatter plot for critic score vs log global sales
@@ -505,7 +533,7 @@ ggplot(q2_data, aes(x = Critic_Score, y = log(Global_Sales))) +
     ## Warning: Removed 1 row containing non-finite outside the scale range
     ## (`stat_smooth()`).
 
-![](README_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
 
 There is a very apparent log linear relationship between Sales and User
 Score. Critic reviews may hold more weight in shaping purchasing
@@ -570,6 +598,10 @@ high_sales_platforms <- q1_data %>%
     )
   )
 
+high_sales_platforms$Company = as.factor(high_sales_platforms$Company)
+
+
+
 # Define custom color mapping
 company_colors <- c(
   "Nintendo"  = "#F4A6A6",  # Pastel red
@@ -580,7 +612,7 @@ company_colors <- c(
 
 
 # Plot with custom colors
-ggplot(high_sales_platforms, aes(x = Platform, y = log(Global_Sales), fill = Company)) +
+ggplot(high_sales_platforms, aes(x = reorder(Platform, desc(Company)), y = log(Global_Sales), fill = Company)) +
   geom_boxplot(outlier.color = "red") +
   scale_fill_manual(values = company_colors) +
   labs(
@@ -599,7 +631,7 @@ ggplot(high_sales_platforms, aes(x = Platform, y = log(Global_Sales), fill = Com
     ## Warning: Removed 1250 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 We’re looking at the distribution of global sales across gaming
 platforms. Each box represents a platform, and it shows how game sales
@@ -659,7 +691,7 @@ ggplot(q1_platform, aes(x = reorder(Platform, -totalSales), y = totalSales, fill
   )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 We’re looking at total global sales across platforms, so instead of
 individual games, this is the sum of all game sales per platform. Right
@@ -734,7 +766,7 @@ ggplot(platform_region_sales, aes(x = reorder(Platform, -Sales), y = Sales, fill
   )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 This breaks down platform sales by region, so we can see which consoles
 were most popular in different parts of the world. Let’s start with
@@ -773,34 +805,43 @@ is a hub for gaming innovation.
 As said by CNN, Tokyo was the front leader for gaming with SEGA and
 Nintendo originating there. This explains the platforming being higher.
 
-### Year Graphs
-
 ``` r
- q1_data %>%
-  ggplot(aes(x = Year, y = Global_Sales)) +
-  geom_col() +
-  labs(
-    title = "Global Video Game Sales Over Time",
-    x = "Year",
-    y = "Global Sales (in millions)"
-  ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_y_continuous(labels = scales::comma)
+# Define brand colors
+company_colors <- c(
+  "Nintendo"  = "#F4A6A6",  # Pastel red
+  "Sony"      = "#A6B8E6",  # Pastel blue
+  "Microsoft" = "#A9D6A4",  # Pastel green
+  "PC"        = "#C0C0C0"   # Light gray
+)
+
+# Add Company info to platform summary
+q1_platform_avg_year <- q1_data %>%
+  group_by(Platform, Year) %>%
+  summarise(avg_sales = mean(Global_Sales, na.rm = TRUE)) %>%
+  mutate(
+    Company = case_when(
+      Platform %in% c("N64", "NS", "Wii", "DS", "NES", "GC") ~ "Nintendo",
+      Platform %in% c("PS", "PS2", "PS3", "PS4", "PSP", "PSN") ~ "Sony",
+      Platform %in% c("XB", "X360", "XOne") ~ "Microsoft",
+      Platform == "PC" ~ "PC",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  filter(Company != "Other") %>%
+  arrange(desc(avg_sales))
 ```
 
-    ## Warning: Removed 84 rows containing missing values or values outside the scale range
-    ## (`geom_col()`).
-
-![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+    ## `summarise()` has grouped output by 'Platform'. You can override using the
+    ## `.groups` argument.
 
 ``` r
-q1_data %>%
-  filter(between(Year, 2005, 2015)) %>%
-  ggplot(aes(x = Year, y = Global_Sales)) +
+q1_platform_avg_year %>%
+  filter(Year > 2000) %>%
+  ggplot(aes(x = Year, y = avg_sales)) +
   geom_col() +
-  facet_wrap(~Genre) +
+  facet_wrap(~Platform) +
   labs(
-    title = "Global Video Game Sales (2005-2015) by Genre",
+    title = "Average Genre Sales by Year (After 2000)",
     x = "Year",
     y = "Global Sales (in millions)"
   ) +
